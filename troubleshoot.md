@@ -16,9 +16,9 @@ layout: default
 ## GGl (Gate of Whimsy Glitch)
 ![Picture of GGl](assets/GGl_icon.png)
 
-Gate Glitch (or GGl). Is a unique glitch which is currently only possible through the use of save/RAM editing. Although it has been theroised to be possible via *other methods*. It is caused by setting the *byte of wisom* to several values including but not limited to `0xF0` - `0xFF`. This leads to the game being told a Gate is occuring, despite it having no data on *which* Gate - leading to a sort of "null gate".
+Gate Glitch (or GGl) is a unique glitch currently only achievable via Save or RAM editing - although it has been theroised to be possible via *other methods*. It occurs when the *byte of wisom* is set to one of several values, including but not limited to `0xF0` - `0xFF`. This tricks the game into believing a Gate is occuring, despite it having no data on *which* Gate - leading to a sort of "null gate".
 
-It causes the below oddities to occur:
+It causes the below oddities to occur (a frankenstein mix of Gates and normal gameplay):
 * The pulsing rainbow/chromatic overlay normally used during Gates is stuck on-screen at all times.
 * There are No NPCs, Shops or UI Interaction. The overworld is empty/depopulated as if it were a Gate. 
 * Random collision zones/forcefields appear in places that shouldn’t block you - perhaps areas where the minimap name changes even if it dosen't change the location (there are like 5 of these in Harrisville).
