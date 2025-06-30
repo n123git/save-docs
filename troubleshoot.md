@@ -25,7 +25,7 @@ It causes the below oddities to occur (a frankenstein mix of Gates and normal ga
 * The Diary, Battle, Medal Swap, Blasters apps are greyed out.
 * Bikes and the icon on the bottom right of the minimap are disabled.
 * Pause Menu shows "Give Up" option As if you’re mid-Gate or mid-battle. 
-* Mission Objective says "Win 0 battle(s)" some kind of fallback Gate mission data. 
+* The Current Objective becomes "Win 0 battle(s)!", probably as some sort of fallback/default Gate mission data. 
 * Unlike normal Gates, music stays like the regular map BGM. 
 * Normal loading zones don’t work (like walking to a different map via a street exit). Despite that, some interactions such as doors do.
 * Changing areas plays the Gate entry animation (where you come out of the portal and a title card appears for a few seconds before you can move) but without a title card (e.g., "Expert Mission").
