@@ -53,4 +53,4 @@ This glitch creates several neat oddities, including: breaking the captions, hid
 ![Invisible Bicycle due to invalid skin](assets/ghost_bicycle.png)
 
 ## Invalid Contacts
-- If your hobbies, ambitions etc become Not Set or you're Yo-kai/Icons become Pandle. Then they are invalid - just change them. Extremely simple - no major data lost. <br/>   <img src="assets/pandle_notset_invalid.png" alt="Screenshot of an Invalid Contacts Page" width="400"/>
+- If your hobbies, ambitions etc become Not Set or your Yo-kai/Icons become Pandle when you didnt set them to. Then they are invalid! Just change them back. Extremely simple - no major data lost. <br/>   <img src="assets/pandle_notset_invalid.png" alt="Screenshot of an Invalid Contacts Page" width="400"/>
