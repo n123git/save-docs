@@ -20,7 +20,7 @@ Gate Glitch (or GGl) is a unique glitch currently only achievable via Save or RA
 
 It causes the below oddities to occur (a frankenstein mix of Gates and normal gameplay):
 * The pulsing rainbow/chromatic overlay normally used during Gates is stuck on-screen at all times.
-* There are No NPCs, Shops or UI Interaction. The overworld is empty/depopulated as if it were a Gate. 
+* There are No NPCs (Including treasure chests), Shops (The buildings/bodies obviously still exist) or UI Interactions. The overworld is empty/depopulated as if it were a Gate. 
 * Random collision zones/forcefields appear in places that shouldn’t block you - perhaps areas where the minimap name changes even if it dosen't change the location (there are like 5 of these in Harrisville).
 * The Diary, Battle, Medal Swap, Blasters apps are greyed out.
 * Bikes and the icon on the bottom right of the minimap are disabled.
