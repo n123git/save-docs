@@ -5,6 +5,8 @@ layout: default
 ---
 
 
+Note: Some images used are imprecise screenshots via snipping tools - while others are direct image dumps. Quality difference is however unnoticable.
+
 # Yo-kai
 
 ## No Yo-kai Appear
@@ -48,8 +50,7 @@ This glitch creates several neat oddities, including: breaking the captions, hid
 ## Ghost Bicycle and Ghost Bell
   These are both caused by invalid values. An invalid bicycle skin leads to the bicycle itself appearing invisible, despite nate being in the bicycle position as usual - which looks very intruiging. An invalid bell leads to the bell being silent - completely eliminating the point almost as if it werent a feature in the first place.<br/>
 
-## Invalid Contacts
-- If your hobbies, ambitions etc become Not Set or you're Yo-kai/Icons become Pandle. Then they are invalid - just change them. Extremely simple - no major data lost. <br/>
-  ![Invalid Contacts Page](assets/pandle_notset_invalid.png)
-
 ![Invisible Bicycle due to invalid skin](assets/ghost_bicycle.png)
+
+## Invalid Contacts
+- If your hobbies, ambitions etc become Not Set or you're Yo-kai/Icons become Pandle. Then they are invalid - just change them. Extremely simple - no major data lost. <br/>   <img src="assets/pandle_notset_invalid.png" alt="Screenshot of an Invalid Contacts Page" width="400"/>
