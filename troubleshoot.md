@@ -32,3 +32,5 @@ It causes the below oddities to occur:
       * You can leave and re-enter as much as you want, but the Gate never clears instead the gate progress resets when you leave.
    * No Gate Globes can be earned, as the exit goals never fulfill.
    * The Infinite Tunnel entrance becomes a bricked-up wall like when you’ve used all your daily attempts, but the tunnel’s black fog overlay still appears faintly (as if its graphics layer is still active).
+
+![Screenshot of the Infinite Tunnel during GGl](assets/ggl_tunnel.webp)
