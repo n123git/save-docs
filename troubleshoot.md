@@ -45,6 +45,6 @@ This glitch creates several neat oddities, including: breaking the captions, hid
 ![Invalid Wallpaper](assets/wallpaper_corrupt.png)
 
 ## Ghost Bicycle and Ghost Bell
-These are both caused by invalid values. Bad bicycle skin leads to the bicycle being invisible, bad bell makes it silent.<br/>
+  These are both caused by invalid values. An invalid bicycle skin leads to the bicycle itself appearing invisible, despite nate being in the bicycle position as usual - which looks very intruiging. A bad bell makes it silent.<br/>
 
 ![Invisible Bicycle due to invalid skin](assets/ghost_bicycle.png)
