@@ -1,8 +1,8 @@
-title: Just the Docs Template
-description: A starter template for a Jeykll site using the Just the Docs theme!
+title: save-docs
+description: Documentation for save files; bugs, my save editors and API, along with any tools I use/developed.
 theme: just-the-docs
 
-url: https://just-the-docs.github.io
+url: https://n123git.github.io/save-docs
 
-aux_links:
-  Template Repository: https://github.com/just-the-docs/just-the-docs-template
+aux_links: # remove if you don't want this link to appear on your pages yes I copy/pasted the template :>>>>>>>>>>>>>>
+  Template Repository: https://github.com/n123git/save-docs
