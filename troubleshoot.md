@@ -1,7 +1,9 @@
 ---
 title: Phenomena Troubleshooting
 nav_order: 2
+layout: default
 ---
+
 
 # Yo-kai
 
