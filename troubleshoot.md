@@ -8,10 +8,15 @@ layout: default
 # Yo-kai
 
 ## No Yo-kai Appear
+This is a very common issue. It stops the game from recognising your yokai, and leads to several issues. Note that this dosen't affect the selected "Comapnion Yo-kai" as this only stores what Yo-kai i.e. pandanoko - not which one this is in your medals and dosen't check if you *actually have* that Yo-kai. </br>
+
+This is an example of what it may appear like in your inventory if your entire team is corrupted via this method. The good news is that since this is only the #0 and #1 entries, it *can* be restored with some effort - although tedious.</br>
+![Missing Yo-kai Team in Inventory due to mismatched num entries](assets/yokai_corruptA.png)
 
 ## Hurt Pandles
-
+This is a result of []. However, this is more serious as it *may* result in actual data loss. This form of corruption is catgeorised by level 0 yokai, with no HP or soul. These are usually either pandles or just yo-kai with a blank icon. Unlike the previous issue the game still considers them Yo-kai.
 # Misc
+
 
 ## GGl (Gate of Whimsy Glitch)
 ![Picture of GGl](assets/GGl_icon.png)
