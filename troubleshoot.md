@@ -41,7 +41,8 @@ It causes the below oddities to occur (a frankenstein mix of Gates and normal ga
    * The Infinite Tunnel entrance becomes a bricked-up wall like when you’ve used all your daily attempts, but the tunnel’s black fog overlay still appears faintly (as if its graphics layer is still active). <br/><img src="/assets/ggl_tunnel.webp" alt="Screenshot of the Infinite Tunnel during GGl" width="400"/>
 
 ## Ghost Wallpaper
-This glitch creates several neat oddities, including: breaking the captions, hiding decimal points, and leaving you with a plain black Yo-kai Pad Wallpaper. It takes position -1 in the wallpaper select (before Cool Blue - the first wallpaper), and occurs when your wallpaper is set to an invalid value (`0x10`-`0xFF`). It is the *only* wallpaper to be nameless (showing as blank in the wallpaper select) and aside from that the above it causes no harmful problems. Just a neat oddity
+This glitch creates several neat oddities, including: breaking the captions, hiding decimal points, and leaving you with a plain black Yo-kai Pad Wallpaper. It takes position -1 in the wallpaper select (before Cool Blue - the first wallpaper), and occurs when your wallpaper is set to an invalid value (`0x10`-`0xFF`). It is the *only* wallpaper to be nameless (showing as blank in the wallpaper select) and aside from that the above it causes no harmful problems. Just a neat oddity.</br>
+![Invalid Wallpaper](assets/wallpaper_corrupt.png)
 
 ## Ghost Bicycle and Ghost Bell
 These are both caused by invalid values. Bad bicycle skin leads to the bicycle being invisible, bad bell makes it silent.<br/>
