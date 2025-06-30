@@ -42,4 +42,8 @@ It causes the below oddities to occur (a frankenstein mix of Gates and normal ga
 
 ## Ghost Wallpaper
 This glitch creates several neat oddities, including: breaking the captions, hiding decimal points, and leaving you with a plain black Yo-kai Pad Wallpaper. It takes position -1 in the wallpaper select (before Cool Blue - the first wallpaper), and occurs when your wallpaper is set to an invalid value (`0x10`-`0xFF`). It is the *only* wallpaper to be nameless (showing as blank in the wallpaper select) and aside from that the above it causes no harmful problems. Just a neat oddity
-##
+
+## Ghost Bicycle and Ghost Bell
+These are both caused by invalid values. Bad bicycle skin leads to the bicycle being invisible, bad bell makes it silent.<br/>
+
+![Invisible Bicycle due to invalid skin](assets/ghost_bicycle.png)
