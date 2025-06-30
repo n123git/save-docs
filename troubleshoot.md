@@ -41,10 +41,10 @@ It causes the below oddities to occur (a frankenstein mix of Gates and normal ga
    * The Infinite Tunnel entrance becomes a bricked-up wall like when you’ve used all your daily attempts, but the tunnel’s black fog overlay still appears faintly (as if its graphics layer is still active). <br/><img src="/assets/ggl_tunnel.webp" alt="Screenshot of the Infinite Tunnel during GGl" width="400"/>
 
 ## Ghost Wallpaper
-This glitch creates several neat oddities, including: breaking the captions, hiding decimal points, and leaving you with a plain black Yo-kai Pad Wallpaper. It takes position -1 in the wallpaper select (before Cool Blue - the first wallpaper), and occurs when your wallpaper is set to an invalid value (`0x10`-`0xFF`). It is the *only* wallpaper to be nameless (showing as blank in the wallpaper select) and aside from that the above it causes no harmful problems. Just a neat oddity.</br>
+This glitch creates several neat oddities, including: breaking the captions, hiding decimal points, and leaving you with a plain black Yo-kai Pad Wallpaper. It takes position -1 in the wallpaper select (before Cool Blue - the first wallpaper), and occurs when your wallpaper is set to an invalid value (`0x10`-`0xFF`). It is the *only* wallpaper to be nameless (showing as blank in the wallpaper select) and aside from that the above it causes no harmful problems. Just a neat oddity.<br/>
 ![Invalid Wallpaper](assets/wallpaper_corrupt.png)
 
 ## Ghost Bicycle and Ghost Bell
-  These are both caused by invalid values. An invalid bicycle skin leads to the bicycle itself appearing invisible, despite nate being in the bicycle position as usual - which looks very intruiging. A bad bell makes it silent.<br/>
+  These are both caused by invalid values. An invalid bicycle skin leads to the bicycle itself appearing invisible, despite nate being in the bicycle position as usual - which looks very intruiging. An invalid bell leads to the bell being silent - completely eliminating the point almost as if it werent a feature in the first place.<br/>
 
 ![Invisible Bicycle due to invalid skin](assets/ghost_bicycle.png)
