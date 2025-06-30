@@ -11,7 +11,9 @@ layout: default
 
 ## Hurt Pandles
 
-# GGl (Gate of Whimsy Glitch)
+# Misc
+
+## GGl (Gate of Whimsy Glitch)
 ![Picture of GGl](assets/GGl_icon.png)
 
 Gate Glitch (or GGl). Is a unique glitch which is currently only possible through the use of save/RAM editing. Although it has been theroised to be possible via *other methods*. It is caused by setting the *byte of wisom* to several values including but not limited to `0xF0` - `0xFF`. This leads to the game being told a Gate is occuring, despite it having no data on *which* Gate - leading to a sort of "null gate".
