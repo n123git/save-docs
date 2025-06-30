@@ -16,7 +16,7 @@ layout: default
 ## GGl (Gate of Whimsy Glitch)
 ![Picture of GGl](assets/GGl_icon.png)
 
-Gate Glitch (or GGl) is a unique glitch currently only achievable via Save or RAM editing - although it has been theroised to be possible via *other methods*. It occurs when the *byte of wisom* is set to one of several values, including but not limited to `0xF0` - `0xFF`. This tricks the game into believing a Gate is occuring, despite it having no data on *which* Gate - leading to a sort of "null gate".
+Gate Glitch (or GGl) is a unique glitch currently only achievable via Save or RAM editing - although it has been theroised to be possible via *other methods*. It occurs when the *byte of wisdom* is set to one of several values, including but not limited to `0xF0` - `0xFF`. This tricks the game into believing a Gate is occuring, despite it having no data on *which* Gate - leading to a sort of "null gate".
 
 It causes the below oddities to occur (a frankenstein mix of Gates and normal gameplay):
 * The pulsing rainbow/chromatic overlay normally used during Gates is stuck on-screen at all times.
