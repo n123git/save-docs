@@ -23,7 +23,7 @@ This is a result of []. However, this is more serious as it *may* result in actu
 ## GGl (Gate of Whimsy Glitch)
 ![Picture of GGl](assets/GGl_icon.png)
 
-Gate Glitch (or GGl) is a unique glitch currently only achievable via Save or RAM editing - although it has been theroised to be possible via *other methods*. It occurs when the *byte of wisdom* is set to one of several values, including but not limited to `0xF0` - `0xFF`. This tricks the game into believing a Gate is occuring, despite it having no data on *which* Gate - leading to a sort of "null gate".
+Gate Glitch (or GGl) is a unique glitch currently only achievable via Save or RAM editing - although it has been theroised to be possible via *other methods*. It occurs when the *byte of wisdom* is set to one of several values, including but not limited to `0xF0` - `0xFF`. This tricks the game into believing a Gate is occuring, despite it having no data on *which* Gate - leading to a sort of "null gate". It can be solved by clicking "Give Up" in the games pause menu.
 
 It causes the below oddities to occur (a frankenstein mix of Gates and normal gameplay):
 * The pulsing rainbow/chromatic overlay normally used during Gates is stuck on-screen at all times.
@@ -44,13 +44,13 @@ It causes the below oddities to occur (a frankenstein mix of Gates and normal ga
    <img src="assets/ggl_tunnel.png" alt="Screenshot of the Infinite Tunnel during GGl" width="400"/> <!-- https://github.com/n123git/save-docs/assets/ggl_tunnel.png -->
 
 ## Ghost Wallpaper
-This glitch creates several neat oddities, including: breaking the captions, hiding decimal points, and leaving you with a plain black Yo-kai Pad Wallpaper. It takes position -1 in the wallpaper select (before Cool Blue - the first wallpaper), and occurs when your wallpaper is set to an invalid value (`0x10`-`0xFF`). It is the *only* wallpaper to be nameless (showing as blank in the wallpaper select) and aside from that the above it causes no harmful problems. Just a neat oddity.<br/>
+This glitch creates several neat oddities, including: breaking the captions, hiding decimal points, and leaving you with a plain black Yo-kai Pad Wallpaper. It takes position -1 in the wallpaper select (before Cool Blue - the first wallpaper), and occurs when your wallpaper is set to an invalid value (`0x10`-`0xFF`). It is the *only* wallpaper to be nameless (showing as blank in the wallpaper select) and aside from that the above it causes no harmful problems. Just a neat oddity which can be solved by selecting a different wallpaper.<br/>
 ![Invalid Wallpaper](assets/wallpaper_corrupt.png)
 
 ## Ghost Bicycle and Ghost Bell
-  These are both caused by invalid values. An invalid bicycle skin leads to the bicycle itself appearing invisible, despite nate being in the bicycle position as usual - which looks very intruiging. An invalid bell leads to the bell being silent - completely eliminating the point almost as if it werent a feature in the first place.<br/>
+  These are both caused by invalid values. An invalid bicycle skin leads to the bicycle itself appearing invisible, despite nate being in the bicycle position as usual - which looks very intruiging. An invalid bell leads to the bell being silent - completely eliminating the point almost as if it werent a feature in the first place. This can be solved by buying a different bicycle/bell.<br/>
 
 ![Invisible Bicycle due to invalid skin](assets/ghost_bicycle.png)
 
 ## Invalid Contacts
-- If your hobbies, ambitions etc become Not Set or your Yo-kai/Icons become Pandle when you didnt set them to. Then they are invalid! Just change them back. Extremely simple - no major data lost. <br/>   <img src="assets/pandle_notset_invalid.png" alt="Screenshot of an Invalid Contacts Page" width="400"/>
+- If your HQ, Job, Hobby or Ambition become Not Set and/or your Favorite Yo-kai and Icon become Pandle when you didnt set them to those values. Then they are invalid! Just change them back. Extremely simple - no major data lost. <br/>   <img src="assets/pandle_notset_invalid.png" alt="Screenshot of an Invalid Contacts Page" width="400"/>
