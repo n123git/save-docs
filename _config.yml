@@ -7,17 +7,9 @@ url: https://n123git.github.io/save-docs
 aux_links: # remove if you don't want this link to appear on your pages yes I copy/pasted the template :>>>>>>>>>>>>>>
  Github: https://github.com/n123git/save-docs
 
-# Initial theme (can be light, dark, or nil to default to system/browser)
-color_scheme: light
+color_scheme: dark
 
-# Which scheme the toggle switches to
-toggle_color_scheme: dark
-
-# Show toggle button on all pages (default)
-toggle_page_url: nil
-
-# Automatic switching based on OS preference
-# toggle_auto_mode: true
-
-toggle_icon: material/weather-night
-
+color_scheme_toggle:
+  enable: true
+  icon: material/weather-night
+  auto: true
