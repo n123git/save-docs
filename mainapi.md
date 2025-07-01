@@ -4,10 +4,10 @@ nav_order: 2
 layout: default
 ---
 
-Hi! My API allows you to interact with my save editor to make macros like the ones below.
-* [this]() describes the API calls for the yokai editor (available through devtools console once the save is loaded)
-* [this!]() describes the API calls for the key items editor  (again, available through devtools console once the save is loaded)
-* [thiswow!]() describes the API calls for the general editor  (again, AGAIN, available through devtools console once the save is loaded)
+Hi! This API allows you to interact with my save editor, allowing you to make macros like the one below.
+* [this]() describes the API calls for the yokai editor (available through devtools console once the save is loaded).
+* [this!]() describes the API calls for the key items editor  (again, available through devtools console once the save is loaded).
+* [thiswow!]() describes the API calls for the general editor  (again, AGAIN, available through devtools console once the save is loaded).
 
 Anyway, here are the examples
 
