@@ -7,3 +7,8 @@ font_awesome: true
 
 aux_links: # remove if you don't want this link to appear on your pages yes I copy/pasted the template :>>>>>>>>>>>>>>
  Github: https://github.com/n123git/save-docs
+
+just-the-docs:
+  # Enable theme switcher (dark/light mode toggle)
+  theme_switcher:
+    enabled: true
