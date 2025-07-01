@@ -12,7 +12,7 @@ Hi! This API allows you to interact with my save editor, allowing you to make ma
 Anyway, here are the examples
 
 
-## Examples
+## Examples!
 
 Yo-kai Example #1: Fixes IVs of all Yo-kai:
 ```js
