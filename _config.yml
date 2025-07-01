@@ -6,17 +6,3 @@ url: https://n123git.github.io/save-docs
 
 aux_links: # remove if you don't want this link to appear on your pages yes I copy/pasted the template :>>>>>>>>>>>>>>
  Github: https://github.com/n123git/save-docs
-
-# Enable dark mode toggle
-theme:
-  palette:
-    - scheme: default
-      primary: indigo
-      toggle:
-        icon: '🌙'
-        name: 'Dark Mode'
-    - scheme: slate
-      primary: indigo
-      toggle:
-        icon: '☀️'
-        name: 'Light Mode'
