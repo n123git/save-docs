@@ -1,1 +1,15 @@
+<ul class="aux-links">
+  {% for label, url in site.aux_links %}
+    <li>
+      <a href="{{ url }}" target="_blank" rel="noopener">
+        {% if label contains 'GitHub' or label contains 'Repository' %}
+          <i class="fab fa-github" aria-hidden="true"></i>
+          <span class="sr-only">{{ label }}</span>
+        {% else %}
+          {{ label }}
+        {% endif %}
+      </a>
+    </li>
+  {% endfor %}
+</ul>
 
