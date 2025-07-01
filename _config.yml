@@ -17,4 +17,7 @@ toggle_color_scheme: dark
 toggle_page_url: nil
 
 # Automatic switching based on OS preference
-toggle_auto_mode: true
+# toggle_auto_mode: true
+
+toggle_icon: material/weather-night
+
