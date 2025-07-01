@@ -5,7 +5,7 @@ layout: default
 has_children: true
 ---
 
-Hi! This API allows you to interact with my save editor, allowing you to make macros like the one below.
+Hi! This API allows you to interact with my save editor, allowing you to make macros like the one below. Check the sidebar for specific documentation.
 * [this]() describes the API calls for the yokai editor (available through devtools console once the save is loaded).
 * [this!]() describes the API calls for the key items editor  (again, available through devtools console once the save is loaded).
 * [thiswow!]() describes the API calls for the general editor  (again, AGAIN, available through devtools console once the save is loaded).
