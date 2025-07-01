@@ -9,10 +9,10 @@ Hi! This API allows you to interact with my save editor, allowing you to make ma
 * [this!]() describes the API calls for the key items editor  (again, available through devtools console once the save is loaded).
 * [thiswow!]() describes the API calls for the general editor  (again, AGAIN, available through devtools console once the save is loaded).
 
-Anyway, here are the examples
+Anyway, here are the examples :)
 
 
-## Examples!
+## Examples
 
 Yo-kai Example #1: Fixes IVs of all Yo-kai:
 ```js
