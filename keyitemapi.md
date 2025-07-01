@@ -7,7 +7,7 @@ title: Key Items Editor API
 
 # Yo-kai Save Editor API Documentation
 
-A (hopefully) complete JS API for interacting with my save editor's Key Items branch. This documentation is up-to-date with API v1.1 and below
+A (hopefully) complete JS API for interacting with my save editor's Key Items branch. This documentation is up-to-date with API v1.1 and below.
 
 * How do you use the API?
 * Follow this doc (XD), and paste the code into the JS console once your save file is loaded :>
