@@ -2,6 +2,7 @@
 title: API Docs!
 nav_order: 2
 layout: default
+has_children: true
 ---
 
 Hi! This API allows you to interact with my save editor, allowing you to make macros like the one below.
