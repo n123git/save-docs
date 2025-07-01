@@ -12,13 +12,11 @@ theme:
   palette:
     - scheme: default
       primary: indigo
-      accent: indigo
       toggle:
         icon: '🌙'
         name: 'Dark Mode'
     - scheme: slate
       primary: indigo
-      accent: indigo
       toggle:
         icon: '☀️'
         name: 'Light Mode'
