@@ -3,12 +3,22 @@ description: Documentation for save files; bugs, my save editors and API, along 
 theme: just-the-docs
 
 url: https://n123git.github.io/save-docs
-font_awesome: true
 
 aux_links: # remove if you don't want this link to appear on your pages yes I copy/pasted the template :>>>>>>>>>>>>>>
  Github: https://github.com/n123git/save-docs
 
-just-the-docs:
-  # Enable theme switcher (dark/light mode toggle)
-  theme_switcher:
-    enabled: true
+# Enable dark mode toggle
+theme:
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: '🌙'
+        name: 'Dark Mode'
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: '☀️'
+        name: 'Light Mode'
