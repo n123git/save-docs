@@ -5,7 +5,7 @@ layout: default
 ---
 
 
-Note: Some images used are imprecise screenshots via snipping tools - while others are direct image dumps. Quality difference is however unnoticable.
+Note: Some images used are screenshots via snipping tools - while others are direct image dumps. Quality difference is unnoticable however.
 
 # Yo-kai
 
