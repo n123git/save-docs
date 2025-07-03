@@ -12,7 +12,7 @@ The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to rem
 
 ## v1.0 Save Files
 In the international versions, this format affects save files last saved in v1.0. They can be read by v2.0 game copies. In the JP versions, it describes any version under 2.0, as the version history is different. Note that all copies of _Psychic Specters_ or _Shin'uchi_ are v2.0 ignoring version. A save file will have v2.0 marked on it in-game if it isn't.
-* These are first decrypted via a slighly non-standard AES-CCM (not GCM or plain CTR). The aeskey is fixed in v1.0 saves: in UTF-8 its "5+NI8WVq09V7LI5w". Then it uses a proprietary cipher, which I refer to as "YWCipher" inspired by Togenyan's naming schema. After that the CRC and key are stripped. Here is a demonstration of the AES-CCM used:
+* These are first decrypted via a slighly non-standard AES-CCM (not GCM or plain CTR). The aeskey is fixed in v1.0 saves: in UTF-8 its "5+NI8WVq09V7LI5w". Then it uses a proprietary cipher, which I refer to as "YWCipher" inspired by Togenyan's naming schema. After that the CRC and key can be stripped. Here is a C++ demonstration from Togenyan's editor:
 
 ```cpp
 #pragma execution_character_set("utf-8")
@@ -96,10 +96,10 @@ QByteArray *CCMCipher::decrypt(const QByteArray &in)
 ```
 
 ## v2.0 Save Files
-This format affects save files last saved in v2.0 (or higher due to JP version history). Note that all copies of _Psychic Specters_ or _Shin'uchi_ (regardless of update) are v2.0. A save file will have v2.0 marked on it in-game if it is. The main difference is that the AESkey is no longer fixed, it is instead loaded from the `head.yw`. Specifically it gets the headdata, and places it into a fucntion that treats it as {ciphertext, CRC value of ciphertext, encryption key}. First, it extracts the last 8 bytes:
+This format affects save files last saved in v2.0+ (high versions exist due to JP version history). Note that all copies of _Psychic Specters_ or _Shin'uchi_ (regardless of update) are v2.0. A save file will have v2.0 marked on it in-game if it is. The main difference is that the AESkey is no longer fixed, it is instead loaded from the `head.yw`. It is ...... ... . .. .LOREM IPSUM DOLAR SIT AMET {ciphertext, CRC value of ciphertext, encryption key}. First, it extracts the last 8 bytes:
 * 4 bytes CRC32 of the ciphertext
 * 4 bytes encryption key
-Then it removes/strips them as they are no longer important. Verifies the integrity of the ciphertext by checking that its calculated CRC matches the given CRC. If it doesn't match → it will return NULL, meaning the decryption fails. It then uses the proprietary `YWCipher` to decrypt it using the extracted key and then appends the original CRC + key (the last 8 bytes of the input) back into to the decrypted data. Now, it reads a uint32 (32-bit unsigned integer) from the decrypted file starting at offset `0x0C` (12). Then uses it as a seed for XORshift PRNG to generate 16 bytes continuosly until it gets a 128-bit AES key.
+Then it removes/strips them as they are no longer important. Verifies the integrity of the ciphertext by checking that its calculated CRC matches the given CRC. It then uses `YWCipher` to decrypt it (using the key) before it appends the original CRC + key (the last 8 bytes of the input) back into the decrypted data. Where it then reads a uint32 (32-bit unsigned integer) from the decrypted file starting at offset `0x0C` (12). Which it uses as a seed for XORshift PRNG to generate 16 bytes continuously until it gets a 128-bit AES key.
 
 
 
@@ -286,7 +286,7 @@ QByteArray* YWCipher::encrypt(const QByteArray &in)
     return out;
 }
 
-QByteArray* YWCipher::decrypt(const QByteArray &in)
+QByteArray* YWCipher::decrypt(const QByteArray &in) // YWCipher is symetric decrypt = encrypt (this didnt originally confuse me when I read through togenyans code - why would you ask?)
 {
     return encrypt(in);
 }
