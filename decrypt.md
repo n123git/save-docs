@@ -7,18 +7,21 @@ title: Decryption/Encryption
 
 # Game Files (game*.yw)
 
+First you must understand the structure of `game*.yw` files:
+
+* Nonce (12 bytes) — at offset `0x00`.
+* MAC (16 bytes) — from `0x0C` to `0x1C` (used internally during decryption).
+* Ciphertext — from offset `0x10` onward (includes MAC at the front).
+* AESkey (16 bytes) - depends on the save file version.
+
 ## v0.0 Save Files
 The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to remove it).
 
 ## v1.0 Save Files
 In the international versions, this format affects save files last saved in v1.0. They can be read by v2.0 game copies. In the JP versions, it describes any version under 2.0, as the version history is different. Note that all copies of _Psychic Specters_ or _Shin'uchi_ are v2.0 ignoring version. A save file will have v2.0 marked on it in-game if it isn't.
-* These are first decrypted via a slighly non-standard AES-CCM (not GCM or plain CTR). The aeskey is fixed in v1.0 saves: in UTF-8 its "5+NI8WVq09V7LI5w". Then it uses a proprietary symetric cipher (symetric in that the decrypting process is entirely identical to encrypting), which I refer to as "YWCipher" inspired by Togenyan's naming schema. After that the CRC and key can be stripped. Here is a C++ demonstration from Togenyan's editor:
+* These are first decrypted via AES-CCM (not GCM or CTR). The aeskey is fixed in v1.0 saves: its the UTF-8 representation of "5+NI8WVq09V7LI5w". (Note: since the ciphertext is formatted [mac][data] you may have to rearrange it for your crypto lib). It then it uses a proprietary symmetric cipher (symmetric in that the decryption and encryption process are identical), which I will refer to as "YWCipher" - inspired by Togenyan's naming schema. After that the CRC and key can be stripped. Here is a C++ demonstration from Togenyan's editor:
 
 ```cpp
-#pragma execution_character_set("utf-8")
-
-#include "ccmcipher.h"
-
 static const int TAG_SIZE = 16;
 
 CCMCipher::CCMCipher(const QByteArray &key, const QByteArray &nonce) :
@@ -26,40 +29,6 @@ CCMCipher::CCMCipher(const QByteArray &key, const QByteArray &nonce) :
     nonce(nonce)
 {
 
-}
-
-QByteArray *CCMCipher::encrypt(const QByteArray &in)
-{
-    /*
-     * in  : { plaintext (x byte) }
-     * out : { MAC (16 byte), ciphertext (x byte) }
-     */
-    std::string plaintext(in.data(), in.size());
-    std::string out;
-    try
-    {
-        CryptoPP::CCM< CryptoPP::AES, TAG_SIZE>::Encryption e;
-        e.SetKeyWithIV((unsigned char*)this->key.data(), this->key.size(),
-                       (unsigned char*)this->nonce.data(), this->nonce.size());
-        e.SpecifyDataLengths(0, plaintext.size(), 0);
-
-        /*
-         *  StringSource destroys AuthenticatedEncryptionFilter and StringSink
-         *  when it is destroyed. so no need to delete them.
-         */
-        CryptoPP::StringSource(plaintext, true,
-                               new CryptoPP::AuthenticatedEncryptionFilter(
-                                   e, new CryptoPP::StringSink(out)
-                                   )
-                               );
-    }
-    catch (CryptoPP::Exception &e)
-    {
-        return 0;
-    }
-    QByteArray *result = new QByteArray(out.c_str(), in.size());
-    result->prepend(out.c_str() + in.size(), TAG_SIZE);
-    return result;
 }
 
 QByteArray *CCMCipher::decrypt(const QByteArray &in)
@@ -96,7 +65,7 @@ QByteArray *CCMCipher::decrypt(const QByteArray &in)
 ```
 
 ## v2.0 Save Files
-This format affects save files last saved in v2.0+ (high versions exist due to JP version history). Note that all copies of _Psychic Specters_ or _Shin'uchi_ (regardless of update) are v2.0. A save file will have v2.0 marked on it in-game if it is. The main difference is that the AESkey is no longer fixed, it is instead loaded from the `head.yw`. It is ...... ... . .. .LOREM IPSUM DOLAR SIT AMET {ciphertext, CRC value of ciphertext, encryption key}. First, it extracts the last 8 bytes:
+This format affects save files last saved in v2.0 or higher (higher versions exist due to JP version history). Note that all copies of _Psychic Specters_ or _Shin'uchi_ (regardless of update) are v2.0. A save file will have v2.0 marked on it in-game if it is. The main difference between the two is that the AESkey is no longer fixed, it is instead loaded from the `head.yw`. It is ...... ... . .. .LOREM IPSUM DOLAR SIT AMET {ciphertext, CRC value of ciphertext, encryption key}. First, it extracts the last 8 bytes:
 * 4 bytes CRC32 of the ciphertext
 * 4 bytes encryption key
 Then it removes/strips them as they are no longer important. Verifies the integrity of the ciphertext by checking that its calculated CRC matches the given CRC. It then uses `YWCipher` to decrypt it (using the key) before it appends the original CRC + key (the last 8 bytes of the input) back into the decrypted data. Where it then reads a uint32 (32-bit unsigned integer) from the decrypted file starting at offset `0x0C` (12). Which it uses as a seed for XORshift PRNG to generate 16 bytes continuously until it gets a 128-bit AES key.
@@ -105,22 +74,19 @@ Then it removes/strips them as they are no longer important. Verifies the integr
 
 Here is a slightly readjusted snippet from Togenyan's save editor, the appropriate license is placed next to this `.md`. This snippet detects which version the save file is, and adjusts it accordingly.
 ```cpp
-if (encrypted) {  // Is it an encrypted save
-        this->mgr->setAeskey("5+NI8WVq09V7LI5w"); // test with the hardcoded key used in v1.0 saves
-        if ((status = this->mgr->loadFile(file)) != Error::SUCCESS) {
-            // If that fails, assume Ganso / Honke ver 2.x OR Shin'uchi
-            if ((status = this->mgr->loadKeyFromHeadFile(file)) == Error::SUCCESS) {
-                status = this->mgr->loadFile(file);
-            }
-        }
-    } else { // If decrypted
-        status = this->mgr->loadDecryptedFile(file); // just edit it
+setAeskey("5+NI8WVq09V7LI5w"); // test with the hardcoded key used in v1.0 saves
+if ((status = loadFile(file)) != Error::SUCCESS) { // If that fails, assume Ganso / Honke ver 2.x OR Shin'uchi
+
+   if ((status = loadKeyFromHeadFile(file)) == Error::SUCCESS) {
+     status = loadFile(file);
     }
-    if (status != Error::SUCCESS) { // if it fails
-        QMessageBox::critical(this, tr("ERROR"), QString(tr("ERROR (%1)")).arg(status)); // have a tantrum
-        this->mgr->setAeskey(prevKey); // restore the key
-        return; // exit
-    }
+}
+
+if (status != Error::SUCCESS) { // if it fails
+   QMessageBox::critical(this, tr("ERROR"), QString(tr("ERROR (%1)")).arg(status)); // have a tantrum
+   setAeskey(prevKey); // restore the key
+   return; // exit
+}
 ```
 
 Here is an example depicting the general decryption process (again from Togenyan's save editor, but slightly readjusted. MIT license is goated). 
