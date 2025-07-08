@@ -5,14 +5,14 @@ layout: default
 ---
 
 
-Note: Some images used are screenshots obtained via snipping tools - while others are direct image dumps. Quality difference is unnoticable however.
+<sup style="text-color: grey;">Note: Some images used are screenshots obtained via snipping tools - while others are direct image dumps. Quality difference is unnoticable however.</sup> <!-- Huh the color change dosent seem to work does md not allow CSS or something idk i'll fix it later ig -->
 
 # Yo-kai
 
 ## No Yo-kai Appear
-This is a very common issue. It stops the game from recognising your yokai, and leads to several issues. Note that this dosen't affect the selected "Comapnion Yo-kai" as this only stores what Yo-kai i.e. pandanoko - not which one this is in your medals and dosen't check if you *actually have* that Yo-kai. <br/>
+This is a very common issue. This issue causes the game to not recognise your yokai, leading to several other issues. Note that this dosen't affect the selected "Comapnion Yo-kai" as this only stores what Yo-kai it is i.e. Pandanoko - not which medal it is (it dosen't even check if you *actually have* that Yo-kai). <br/>
 
-This is an example of what it may appear like in your inventory if your entire team is corrupted via this method. The good news is that since this is only the #0 and #1 entries, it *can* be restored with some effort - although tedious.<br/>
+This is an example of what it may appear like ingame if your entire team was corrupted via this method. This method is caused by mismatched/invalid #0 and #1 entries, meaning that it *can* be restored with some effort - although tedious.<br/>
 ![Missing Yo-kai Team in Inventory due to mismatched num entries](assets/yokai_corruptA.png)
 
 ## Hurt Pandles
