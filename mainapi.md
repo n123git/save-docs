@@ -24,7 +24,6 @@ Yo-kai Example #1: Fixes IVs of all Yo-kai:
     let ivTotalTarget = 40; // IV sum
 
     yokaiList.forEach((yokai, index) => { // iterate through - this is kinda obvious
-        // --- Fix IVs --- //
         let IV_HP = yokai.get("IV_HP"); // get all the Ivs of the current yokai
         let IV_Str = yokai.get("IV_Str");
         let IV_Spr = yokai.get("IV_Spr");
