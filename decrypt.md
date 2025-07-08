@@ -24,13 +24,6 @@ In the international versions, this format affects save files last saved in v1.0
 ```cpp
 static const int TAG_SIZE = 16;
 
-CCMCipher::CCMCipher(const QByteArray &key, const QByteArray &nonce) :
-    key(key),
-    nonce(nonce)
-{
-
-}
-
 QByteArray *CCMCipher::decrypt(const QByteArray &in)
 {
     /*
