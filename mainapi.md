@@ -17,28 +17,28 @@ Anyway, here are the examples :)
 
 Yo-kai Example #1: Fixes IVs of all Yo-kai:
 ```js
-(function fixYokaiData() {
-    const yokaiList = getAllYokai();
+(function fixYokaiData() { // define an IIFE for no reason (you dont need to do this I just felt like it when I made this example)
+    const yokaiList = getAllYokai(); // get all yokai
     console.log(`Fixing ${yokaiList.length} Yo-kai...`);
 
-    let ivTotalTarget = 40;
+    let ivTotalTarget = 40; // IV sum
 
-    yokaiList.forEach((yokai, index) => {
+    yokaiList.forEach((yokai, index) => { // iterate through - this is kinda obvious
         // --- Fix IVs ---
-        let IV_HP = yokai.get("IV_HP");
+        let IV_HP = yokai.get("IV_HP"); // get all the Ivs of the current yokai
         let IV_Str = yokai.get("IV_Str");
         let IV_Spr = yokai.get("IV_Spr");
         let IV_Def = yokai.get("IV_Def");
         let IV_Spd = yokai.get("IV_Spd");
 
-        let IV_Sum = Math.floor(IV_HP / 2) + IV_Str + IV_Spr + IV_Def + IV_Spd;
+        let IV_Sum = Math.floor(IV_HP / 2) + IV_Str + IV_Spr + IV_Def + IV_Spd; // should be 40 if it has valid IVs - HP is worth half
 
-        let needsFix = (IV_HP % 2 !== 0) || (IV_Sum !== ivTotalTarget);
+        let needsFix = (IV_HP % 2 !== 0) || (IV_Sum !== ivTotalTarget); // checks if its valid HP must be even since the point goal is 40 and nothing else can be decimal except HP so if HP isnt whole the goal cant be reached - meaning HP must be even
 
         if (needsFix) {
             let ivs = [0, 0, 0, 0, 0];
 
-            for (let i = 0; i < ivTotalTarget; ++i) {
+            for (let i = 0; i < ivTotalTarget; ++i) { // good ol trial and error
                 let r = Math.floor(Math.random() * 5);
                 ivs[r]++;
             }
