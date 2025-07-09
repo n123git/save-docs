@@ -19,7 +19,8 @@ The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to rem
 
 ## v1.0 Save Files
 In the international versions, this format affects save files last saved in v1.0. They can be read by v2.0 game copies. In the JP versions, it describes any version under 2.0, as the version history is different. Note that all copies of _Psychic Specters_ or _Shin'uchi_ are v2.0 ignoring version. A save file will have v2.0 marked on it in-game if it isn't.
-* These are first decrypted via AES-CCM (not GCM or CTR). The aeskey is fixed in v1.0 saves: its the UTF-8 representation of "5+NI8WVq09V7LI5w". (Note: since the ciphertext is formatted [mac][data] you may have to rearrange it for your crypto lib). It then it uses a proprietary symmetric cipher (symmetric in that the decryption and encryption process are identical), which I will refer to as "YWCipher" - inspired by Togenyan's naming schema. After that the CRC and key can be stripped. Here is a C++ demonstration from Togenyan's editor:
+* These are first decrypted via AES-CCM (not GCM or CTR). The aeskey is fixed in v1.0 saves: its the UTF-8 representation of "5+NI8WVq09V7LI5w". (Note: since the ciphertext is formatted [mac][data] you may have to rearrange it for your crypto lib). Then, you extract (store and remove) the CRC and the key from last 8 bytes from the input - where the last 8 bytes are formatted [CRC 32-bit][KEY 32-bit]. Then you (this is REALLY important and will save you from a **major** headache) verify the data matches the CRC before running it through `0x1000` (4096) rounds of `YWCipher` before reappending the CRC and key for encryption.
+* `YWCipher` is a proprietary symmetric cipher (symmetric in that the decryption and encryption process are identical) - where the name is inspired by Togenyan's naming schema. Here is a C++ demonstration from Togenyan's editor:
 
 ```cpp
 static const int TAG_SIZE = 16;
@@ -135,6 +136,50 @@ Error::ErrorCode SaveManager::loadFile(QString path)
     return Error::SUCCESS;
 }
 ```
+
+## YWCipher
+**Inputs:**
+
+* `seed`: an integer used to initialize a deterministic pseudo-random number generator.
+* `rounds`: a positive integer indicating how many shuffling iterations to perform.
+
+#### Constructor init
+
+* Initialise `primeList` - a list of fixed, ordered list of all prime numbers from 3-1621.
+* Create an array `table` of length 256.
+* Fill `table` so that `table[i] = i` for all `i` in `[0, 255]`
+* Create a `Xorshift` instance, seeded by the given `seed`.
+
+#### Create the substitution table
+
+Repeat the following for each iteration `j` in `[0, rounds-1]`:
+
+1. Generate a 16-bit random number `r` from the PRNG (`0 <= r < 65536`).
+
+2. Extract two indices from `r`:
+
+   * `i1 = r & 0xFF` (lower 8 bits of `r`)
+   * `i2 = (r >> 8) & 0xFF` (upper 8 bits of `r`)
+
+3. If `i1` != `i2`, proceed with the swap; otherwise, do nothing for this iteration.
+
+4. Let `val1 = table[i1]` and `val2 = table[i2]`. These are values stored at positions `i1` and `i2`.
+
+5. Swap the elements in `table` at positions `val1` and `val2`:
+
+   * Temporarily store `table[val1]`
+   * Set `table[val1] = table[val2]`
+   * Set `table[val2]` to the temporarily stored value
+
+* After completing all iterations, the `table` array should represent a permutation of all values `[0, 255]`, scrambled according to the process described above.
+* This table is ready to be used as the cipher’s substitution mapping.
+
+##### Important Notes
+
+* The swap in Step  targets positions **defined by the values stored at the extracted indices**, *not* the actual indices.
+
+#### apply
+LOREM IPSUM DOLAR SIT AMET
 
 # Header Files (head.yw)
 These are decrypted in the same way as YW1 saves. Meaning that they are decrypted as if they were a v1.0 save, but without the AES encryption at ALL, just `YWCipher`. Here is an example from Togenyan and NobodyF34R's YW1 Save Editor:
