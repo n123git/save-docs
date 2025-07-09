@@ -5,7 +5,7 @@ nav_order: 1
 title: General (Read First)
 ---
 
-This page marks the basic layout of save files - and al the fundamentals needed to understand it (with the assumption you understand basic concepts such as endianess and constructs such as signed/unsigned integers and bitmasks).
+This page marks the basic layout of save files - and all the fundamentals needed to understand it (with the assumption you understand basic concepts such as endianess and constructs such as signed/unsigned integers and bitmasks).
 
 The Save System is composed of 2 little-endian file types:
  * `game*.yw` files, these hold the main save file data and are named as such, where `game1.yw` is the 1st save file, `game2.yw` is the 2nd, and `game3.yw` is the 3rd and final save file. These store everything you cant initially see before entering the save file and use a `SectionID` format.
