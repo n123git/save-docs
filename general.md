@@ -5,11 +5,11 @@ nav_order: 1
 title: General (Read First)
 ---
 
-This page marks the basic layout of save files - and all the fundamentals needed to understand it (with the assumption you understand basic concepts such as endianess and constructs such as signed/unsigned integers and bitmasks).
+This page marks the basic layout of save files (with the assumption you understand basic concepts such as endianness, and constructs such as signed integers and bitmasks).
 
 The Save System is composed of 2 little-endian file types:
- * `game*.yw` files, these hold the main save file data and are named as such, where `game1.yw` is the 1st save file, `game2.yw` is the 2nd, and `game3.yw` is the 3rd and final save file. These store everything you cant initially see before entering the save file and use a `SectionID` format.
- * `head.yw` files, these contain the player's name, encryption keys for V2 saves - along with their preview data (all the data seen before you click on a save file). Note that editing most of the preview data is usually pointless as saving will restore it to it's correct value, although this dosen't apply to all of them. These are encrypted identically to `YW1` save files.
+ * `game*.yw` files, these hold the main save file data and are named as such, where `game1.yw` is the 1st save file, `game2.yw` is the 2nd, and `game3.yw` is the 3rd and final save file (in game displayed top to bottom). These store everything aside from the player's name, encryption keys and preview data. It use a `SectionID` format.
+ * `head.yw` files, these contain the player's name, encryption keys for V2 saves - along with their preview data (all the data seen before you click on a save file). Editing most of the preview data is pointless as saving will restore it to it's actual value - although this dosen't apply to all properties such as the player's name. These are encrypted identically to `YW1` save files.
 
 # SectionID Format
 
@@ -19,7 +19,7 @@ These save files are mostly nested sequences of Sections. The `SectionID` struct
 * `h2` - a 4-byte integer (`int16`) with the following structure:
 
 * **Bits 0–7** (LSB) → `Section ID`
-* **Bits 8–31** → `Section Size` in bytes (excluding the 8 bytes of headers, i.e., h1 and h2)
+* **Bits 8–31** → `Section Size` in bytes (excluding the 8 bytes of headers, i.e. h1 and h2)
 
 ---
 
@@ -50,7 +50,7 @@ Here is a basic example of an entry in that tree (values are in hex because ye):
 | ...    | ...                                                     | Data. Can be nested.                   |
 | 0x1153C| `FF FE`                                                 | End Marker (0xFEFF)                    |
 
-Here is a basic JS tool to parse SectionIDs:
+Here is a basic JS tool to parse SectionIDs taken from an old version of my save editor:
 ```js
 
 (function (global) {
@@ -204,20 +204,20 @@ global.genOffset = {
 ```
 ## Misc Notes
 
-`game*.yw` contains some data **before** and **after** the first top-level `Section`. This data is accessed via **absolute** offsets, and is therefore not relative to any `Section`. In *Yo-kai Watch 2*, there are exactly **32 bytes (`0x20`) before** the first `Section` start marker.
+`game*.yw` contains some data **before** and **after** the first top-level `Section`. This data is accessed via **absolute** offsets, and is therefore not relative to any `Section`. In *Yo-kai Watch 2*, there are exactly **32 bytes (`0x20`) before** the first `Section` start marker used to store data to re-encrypt the save such as AESkey and MAC.
 
 # Common Data Types
-Data is usually stored as either a `uint8`, `uint32` or ocasionally a `uint16` and `uint64`, signed integers are ocasionally used. For a large series of binary data, bitmasks are used. Examples include Trophies and Unlocked Win Poses. A bitmask is a series of binary data used to represent a high amount of binary data i.e.
+Data is usually stored as either an integers (usually signed) or text (see Reigonal Differences for encoding information). For a large series of binary data, bitmasks are used. Examples include Trophies and Unlocked Win Poses. A bitmask is a series of bits used to represent... well a series of booleans compactly i.e.
 (Arbitrary binary length, DO NOT USE THE LENGTH FOR REFERENCE)
 
 00000000000000000000 → No trophies<br/>
 11111111111111111111 → All trophies<br/>
 10000000000000000001 → First and last trophy only
 
-Also note that all IDs are saved as their CRC-32 Checksum. An example of this is location; your Location is stored as the CRC-32 Checksum of it's file name. A list of all the file names can be found [here](https://tcrf.net/Notes:Yo-kai_Watch_2). And other examples include Items and Yo-kai.
+Also note that all IDs are saved as their CRC-32 Checksum. An example of this is location; your Location is stored as the CRC-32 Checksum of it's file name. A list of all the file names can be found [here](https://tcrf.net/Notes:Yo-kai_Watch_2). Other examples include Items and Yo-kai.
 
 ## Reigonal Differences:
-* JP copies use cp932 (or code page 932) for text - which is an extension of SHIFT_JIS, whereas international save files use UTF-8. They both have ASCII compatibility (not extended ASCII). So the problem is usually worse for JP -> International, than the other way around.
+* JP copies use cp932 (known as Code Page 932 or Windows 31-J) for text - which is an extension of SHIFT_JIS, whereas international save files use UTF-8. They both have ASCII compatibility (not extended ASCII). So the problem is usually more evident using the international system for JP saves than the other way around.
 
 
 ## Unconfirmed
