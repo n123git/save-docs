@@ -11,7 +11,7 @@ The Save System is composed of 2 little-endian file types:
  * `game*.yw` files, these hold the main save file data and are named as such, where `game1.yw` is the 1st save file, `game2.yw` is the 2nd, and `game3.yw` is the 3rd and final save file (in game displayed top to bottom). These store everything aside from the player's name, encryption keys and preview data. It use a `SectionID` format.
  * `head.yw` files, these contain the player's name, encryption keys for V2 saves - along with their preview data (all the data seen before you click on a save file). Editing most of the preview data is pointless as saving will restore it to it's actual value - although this dosen't apply to all properties such as the player's name. These are encrypted identically to `YW1` save files.
 
-# SectionID Format
+# **SectionID Format**
 
 These save files are mostly nested sequences of Sections. The `SectionID` structure uses nested sections where each section starts with two 4-byte header words. There are two forms of Header Words:
 
@@ -206,7 +206,7 @@ global.genOffset = {
 
 `game*.yw` contains some data **before** and **after** the first top-level `Section`. This data is accessed via **absolute** offsets, and is therefore not relative to any `Section`. In *Yo-kai Watch 2*, there are exactly **32 bytes (`0x20`) before** the first `Section` start marker used to store data to re-encrypt the save such as AESkey and MAC.
 
-# Common Data Types
+# **Common Data Types**
 Data is usually stored as either an integers (usually signed) or text (see Reigonal Differences for encoding information). For a large series of binary data, bitmasks are used. Examples include Trophies and Unlocked Win Poses. A bitmask is a series of bits used to represent... well a series of booleans compactly i.e.
 (Arbitrary binary length, DO NOT USE THE LENGTH FOR REFERENCE)
 
