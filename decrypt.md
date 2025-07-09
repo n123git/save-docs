@@ -146,7 +146,7 @@ Error::ErrorCode SaveManager::loadFile(QString path)
 #### Constructor init
 
 * Initialise `primeList` - a list of fixed, ordered list of all prime numbers from 3-1621.
-* Create an array `table` of length 256.
+* Create a `Uint8Array` - referred to as table (with a length of 256), and initialize it with an identity mapping (table[i] = i for i from 0 to 255).
 * Fill `table` so that `table[i] = i` for all `i` in `[0, 255]`
 * Create a `Xorshift` instance, seeded by the given `seed`.
 
@@ -165,8 +165,8 @@ Repeat the following for each iteration `j` in `[0, rounds-1]`:
 
 4. Let `val1 = table[i1]` and `val2 = table[i2]`. These are values stored at positions `i1` and `i2`.
 
-5. Swap the elements in `table` at positions `val1` and `val2`:
-
+5. Swap the elements located at indices equal to the values found in `table` at positions `i1` and `i2`. Meaning, the swap targets `table[val1]` and `table[val2]`, where `val1 = table[i1]` and `val2 = table[i2]`:
+<!-- This is ANNOYINGLY complicated to clarify lol -->
    * Temporarily store `table[val1]`
    * Set `table[val1] = table[val2]`
    * Set `table[val2]` to the temporarily stored value
@@ -179,7 +179,38 @@ Repeat the following for each iteration `j` in `[0, rounds-1]`:
 * The swap in Step  targets positions **defined by the values stored at the extracted indices**, *not* the actual indices.
 
 #### apply
-LOREM IPSUM DOLAR SIT AMET
+This method performs both **encryption and decryption**, since the cipher is **symmetric** (i.e., XOR-based).
+
+##### Parameters
+
+* **`data`**: A `Uint8Array` of bytes to encrypt or decrypt.
+
+##### Returns
+
+* A new `Uint8Array` with the transformed (encrypted or decrypted) data.
+
+###### Process
+
+1. Initialize `ka = 0`.
+2. For each index `idx` in the input:
+
+   * If `(idx & 0xFF) === 0` (i.e., every 256 bytes), update `ka`:
+
+     ```js
+     ka = this.primes[this.table[(idx & 0xFF00) >>> 8]];
+     ```
+
+     This selects a prime number based on the high byte of the index and the scrambled table and ensures that every 256-byte "block" of data uses a new key component (`ka`), derived from the high byte of the index.
+   * Compute a pseudo-random index:
+
+     ```js
+     kb = this.table[(ka * (idx + 1)) & 0xFF];
+     ```
+   * Apply XOR transformation:
+
+     ```js
+     out[idx] = data[idx] ^ kb;
+     ```
 
 # Header Files (head.yw)
 These are decrypted in the same way as YW1 saves. Meaning that they are decrypted as if they were a v1.0 save, but without the AES encryption at ALL, just `YWCipher`. Here is an example from Togenyan and NobodyF34R's YW1 Save Editor:
