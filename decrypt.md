@@ -322,7 +322,90 @@ SaveManager::loadFile(QString path)
 ```
 
 ### n123git (me, JS)
+* AES-CCM (from my save editor but without unneeded bloat):
+```js
+/* Note:
+*  This uses SJCL (Standard Javascript Crypto Library) if it didnt - this example would be longer than my brain could comprehend
+* (took embarrasingly long to find a web-compatible crypto lib that supported CCM mode).
+*/
 
+    // Patch SJCL to add toBits and fromBits
+    sjcl.codec.bytes = {
+      // Converts an array of bytes (0-255) into an array of uint32s (bits)
+      toBits: function(bytes) {
+        var out = [], i, tmp = 0;
+        for (i = 0; i < bytes.length; i++) {
+          // Shift tmp left by 8 bits (a byte lol) and add the current byte
+          tmp = (tmp << 8) | bytes[i];
+          // Every 4 bytes (32 bits), push tmp to output and reset tmp
+          if ((i & 3) === 3) {  // i % 4 === 3
+            out.push(tmp);
+            tmp = 0;
+          }
+        }
+        // If the bytes length is != to a multiple of 4, pad the remaining bits and push it lol
+        if ((bytes.length & 3) !== 0) {
+          // Shift tmp to the left to fill the remaining bits with zeros before pushing
+          out.push(tmp << (8 * (4 - (bytes.length & 3))));
+        }
+        return out;
+      },
+    
+      // Converts an array of uint32s (bits) back into an array of bytes (0-255)
+      fromBits: function(bits) {
+        var bytes = [], i, j;
+        // For each 32-bit integer (uint32)
+        for (i = 0; i < bits.length; i++) {
+          // Extract each byte from it, starting from the most significant byte
+          for (j = 3; j >= 0; j--) {
+            bytes.push((bits[i] >>> (8 * j)) & 0xff);
+          }
+        }
+        // Remove any leftover zero bytes (padding) at the end of the array
+        while (bytes.length > 0 && bytes[bytes.length - 1] === 0) {
+          bytes.pop();
+        }
+        return bytes;
+      }
+    };
+
+    function aesCcmDecrypt(ciphertext, key, nonce) { 
+      try {
+        const keyBits = sjcl.codec.hex.toBits(key);
+        const nonceBits = sjcl.codec.bytes.toBits(Array.from(nonce));
+
+        // Extract MAC (first 16 bytes) and ciphertext (rest)
+        const mac = Array.from(ciphertext.slice(0, 16));
+        const ct = Array.from(ciphertext.slice(16));
+
+        const macBits = sjcl.codec.bytes.toBits(mac);
+        const ctBits = sjcl.codec.bytes.toBits(ct);
+        const combinedBits = ctBits.concat(macBits);
+
+        const decryptedBits = sjcl.mode.ccm.decrypt(new sjcl.cipher.aes(keyBits), combinedBits, nonceBits, [], 128);
+        const decryptedBytes = sjcl.codec.bytes.fromBits(decryptedBits);
+        return new Uint8Array(decryptedBytes);
+      } catch (error) {
+        console.error('AES-CCM decryption error:', error);
+        return null;
+      }
+    }
+```
+* Version Detection (psuedocode this time):
+```js
+function masterdecrypt(savefile, head) {
+    try {
+      decrypt(savefile, "v1") // inconsistent spacing FTW
+    } catch(error) { // if v1 decryption fails
+      try {
+        const key = grabkey(head) // grab key
+        decrypt(savefile, "v2", key) // try again
+      } catch(error) { // if it still fails
+        throw new Error("v1+v2 DECRYPTION FAILED") // complain because something went horribly wrong
+      }
+    }
+}
+```
 ---
 
 # Header Files (head.yw)
