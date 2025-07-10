@@ -12,76 +12,33 @@ First you must understand the structure of `game*.yw` files:
 * Nonce (12 bytes) — at offset `0x00`.
 * MAC (16 bytes) — from `0x0C` to `0x1C` (used internally during decryption).
 * Ciphertext — from offset `0x10` onward (includes MAC at the front).
-* AESkey (16 bytes) - depends on the save file version.
+* AESkey (16 bytes) - the value and location depends on the save file version - more on this further in the doc.
+* Save files are encrypted using `AES-CCM` and a proprietary [*symmetric*](https://en.wikipedia.org/wiki/Symmetric-key_algorithm) (symmetric in that decryption = encryption) cipher which this doc will refer to as `YWCipher` - inspired by Togenyan's naming schema.
 
 ## v0.0 Save Files
 The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to remove it).
 
 ## v1.0 Save Files
-In the international versions, this format affects save files last saved in v1.0. They can be read by v2.0 game copies. In the JP versions, it describes any version under 2.0, as the version history is different. Note that all copies of _Psychic Specters_ or _Shin'uchi_ are v2.0 ignoring version. A save file will have v2.0 marked on it in-game if it isn't.
-* These are first decrypted via AES-CCM (not GCM or CTR). The aeskey is fixed in v1.0 saves: its the UTF-8 representation of "5+NI8WVq09V7LI5w". (Note: since the ciphertext is formatted [mac][data] you may have to rearrange it for your crypto lib). Then, you extract (store and remove) the CRC and the key from last 8 bytes from the input - where the last 8 bytes are formatted [CRC 32-bit][KEY 32-bit]. Then you (this is REALLY important and will save you from a **major** headache) verify the data matches the CRC before running it through `0x1000` (4096) rounds of `YWCipher` before reappending the CRC and key for encryption.
-* `YWCipher` is a proprietary symmetric cipher (symmetric in that the decryption and encryption process are identical) - where the name is inspired by Togenyan's naming schema. Here is a C++ demonstration from Togenyan's editor:
+### Detection
+* In the international versions (non-JP), this format affects save files last saved in v1.0. They can be read by v2.0 game copies.
+  * In JP versions, it describes any version under 2.0, as the version history is different.
+  * Note that all copies of _Psychic Specters_ or _Shin'uchi_ are v2.0. A save file will have v2.0 marked on it in-game if it is.
+* This can be programatically detected by checking if the fixed key AES-CCM decryption fails due to an incorrect authentication tag.
 
-```cpp
-static const int TAG_SIZE = 16;
+### Method
+* These are first decrypted via AES-CCM (not GCM or CTR) and the AESkey is fixed in v1.0 saves: (the UTF-8 representation of "5+NI8WVq09V7LI5w").
+  * Note that since the ciphertext is formatted [mac][data], you may have to rearrange it depending on your crypto lib.
+* Then, you extract (store and remove) the CRC and the key from last 8 bytes from the input - where the last 8 bytes are formatted [CRC 32-bit][KEY 32-bit].
+* Then you (this is REALLY important and will save you from a **major** headache) verify the data matches the CRC before running it through `0x1000` (4096) rounds of `YWCipher` and reappending the CRC and key for encryption.
 
-QByteArray *CCMCipher::decrypt(const QByteArray &in)
-{
-    /*
-     * in  : { MAC (16 byte), ciphertext (x byte) }
-     * out : { plaintext (x byte) }
-     */
-
-    // { MAC, ciphertext } -> { ciphertext, MAC}
-    std::string ciphertext(in.data() + TAG_SIZE, in.size() - TAG_SIZE);
-    ciphertext.append(in.data(), TAG_SIZE);
-
-    std::string out;
-    try
-    {
-        CryptoPP::CCM< CryptoPP::AES, TAG_SIZE>::Decryption d;
-        d.SetKeyWithIV((unsigned char*)this->key.data(), this->key.size(),
-                       (unsigned char*)this->nonce.data(), this->nonce.size());
-        d.SpecifyDataLengths(0, ciphertext.size() - TAG_SIZE, 0);
-
-        CryptoPP::AuthenticatedDecryptionFilter df(
-                    d, new CryptoPP::StringSink(out)
-                    );
-        CryptoPP::StringSource(ciphertext, true, new CryptoPP::Redirector(df));
-    }
-    catch (CryptoPP::Exception &e)
-    {
-        return 0;
-    }
-    QByteArray *result = new QByteArray(out.c_str(), in.size() - TAG_SIZE);
-    return result;
-}
-```
 
 ## v2.0 Save Files
-This format affects save files last saved in v2.0 or higher (higher versions exist due to JP version history). Note that all copies of _Psychic Specters_ or _Shin'uchi_ (regardless of update) are v2.0. A save file will have v2.0 marked on it in-game if it is. The main difference between the two is that the AESkey is no longer fixed, it is instead loaded from the `head.yw`. It is ...... ... . .. .LOREM IPSUM DOLAR SIT AMET {ciphertext, CRC value of ciphertext, encryption key}. First, it extracts the last 8 bytes:
-* 4 bytes CRC32 of the ciphertext
-* 4 bytes encryption key
-Then it removes/strips them as they are no longer important. Verifies the integrity of the ciphertext by checking that its calculated CRC matches the given CRC. It then uses `YWCipher` to decrypt it (using the key) before it appends the original CRC + key (the last 8 bytes of the input) back into the decrypted data. Where it then reads a uint32 (32-bit unsigned integer) from the decrypted file starting at offset `0x0C` (12). Which it uses as a seed for XORshift PRNG to generate 16 bytes continuously until it gets a 128-bit AES key.
+### Detection
+* This format affects all non-v1 save files.
+### Method
+* Identical to that of v1 saves *but*:
+  * The AESkey is no longer fixed, it is instead loaded from the `head.yw`.
 
-
-
-Here is a slightly readjusted snippet from Togenyan's save editor, the appropriate license is placed next to this `.md`. This snippet detects which version the save file is, and adjusts it accordingly.
-```cpp
-setAeskey("5+NI8WVq09V7LI5w"); // test with the hardcoded key used in v1.0 saves
-if ((status = loadFile(file)) != Error::SUCCESS) { // If that fails, assume Ganso / Honke ver 2.x OR Shin'uchi
-
-   if ((status = loadKeyFromHeadFile(file)) == Error::SUCCESS) {
-     status = loadFile(file);
-    }
-}
-
-if (status != Error::SUCCESS) { // if it fails
-   QMessageBox::critical(this, tr("ERROR"), QString(tr("ERROR (%1)")).arg(status)); // have a tantrum
-   setAeskey(prevKey); // restore the key
-   return; // exit
-}
-```
 
 Here is an example depicting the general decryption process (again from Togenyan's save editor, but slightly readjusted. MIT license is goated). 
 
@@ -308,6 +265,66 @@ If using a divisor:
 R = new Xorshift(42)
 R.next(10)  // always returns a value between 0 and 9
 ```
+
+
+## Examples
+### Togenyan (C++)
+Note: I am *NOT* togenyan, in the credits page you should find a link to his github and the appropriate license.
+* AES-CCM: 
+```cpp
+static const int TAG_SIZE = 16;
+
+QByteArray *CCMCipher::decrypt(const QByteArray &in)
+{
+    /*
+     * in  : { MAC (16 byte), ciphertext (x byte) }
+     * out : { plaintext (x byte) }
+     */
+
+    // { MAC, ciphertext } -> { ciphertext, MAC}
+    std::string ciphertext(in.data() + TAG_SIZE, in.size() - TAG_SIZE);
+    ciphertext.append(in.data(), TAG_SIZE);
+
+    std::string out;
+    try
+    {
+        CryptoPP::CCM< CryptoPP::AES, TAG_SIZE>::Decryption d;
+        d.SetKeyWithIV((unsigned char*)this->key.data(), this->key.size(),
+                       (unsigned char*)this->nonce.data(), this->nonce.size());
+        d.SpecifyDataLengths(0, ciphertext.size() - TAG_SIZE, 0);
+
+        CryptoPP::AuthenticatedDecryptionFilter df(
+                    d, new CryptoPP::StringSink(out)
+                    );
+        CryptoPP::StringSource(ciphertext, true, new CryptoPP::Redirector(df));
+    }
+    catch (CryptoPP::Exception &e)
+    {
+        return 0;
+    }
+    QByteArray *result = new QByteArray(out.c_str(), in.size() - TAG_SIZE);
+    return result;
+}
+```
+
+* Version Detection:
+```cpp
+setAeskey("5+NI8WVq09V7LI5w"); // test with the hardcoded key used in v1.0 saves
+if ((status = loadFile(file)) != Error::SUCCESS) { // If that fails, assume Ganso / Honke ver 2.x OR Shin'uchi
+
+   if ((status = loadKeyFromHeadFile(file)) == Error::SUCCESS) {
+     status = loadFile(file);
+    }
+}
+
+if (status != Error::SUCCESS) { // if it fails
+   QMessageBox::critical(this, tr("ERROR"), QString(tr("ERROR (%1)")).arg(status)); // have a tantrum
+   setAeskey(prevKey); // restore the key
+   return; // exit
+}
+```
+
+### n123git (me, JS)
 
 ---
 
