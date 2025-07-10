@@ -178,7 +178,7 @@ Repeat the following for each iteration `j` in `[0, rounds-1]`:
 
 * The swap in Step  targets positions **defined by the values stored at the extracted indices**, *not* the actual indices.
 
-#### apply
+##### Apply
 This method performs both **encryption and decryption**, since the cipher is **symmetric** (i.e., XOR-based).
 
 ##### Parameters
