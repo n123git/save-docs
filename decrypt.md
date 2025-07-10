@@ -212,6 +212,105 @@ This method performs both **encryption and decryption**, since the cipher is **s
      out[idx] = data[idx] ^ kb;
      ```
 
+### `Xorshift` PRNG
+
+**Xorshift** is a [*deterministic*](https://en.wikipedia.org/wiki/Deterministic_system) 128‑bit [xorshift](https://en.wikipedia.org/wiki/Xorshift) PRNG class that uses a 128‑bit internal state and updates it through bitwise ops. It creates a repeatable sequence of `uint32`s and optionally supports bounded output.
+
+### Notes
+
+* Maintains a four‑part 128‑bit internal state.
+* Uses shift and XOR operations to generate the next value.
+* Deterministic: the same seed always leads to the same sequence.
+* Optionally supports bounding output using modulus arithmetic.
+* **Note:** this `Xorshift` uses a `0x6C078965`‑based multiplier and fixed starting words - even for good o'l `0`.
+
+### Initialization
+
+```js
+new Xorshift(seed)
+```
+
+When a seed is provided, the generator initializes its internal state as follows:
+
+```js
+initialize(seed):
+  // default state words when seed === 0
+  state[0] = 0x6C078966
+  state[1] = 0xDD5254A5
+  state[2] = 0xB9523B81
+  state[3] = 0x03DF95B3
+
+  if (seed === 0) return // if its 0 nothing else needs to happen lol
+
+  // otherwise, mix seed into state[0..2]
+  const mult = 0x6C078965
+
+  for (let i = 0; i < 3; i++) {
+    seed ^= seed >>> 30
+    seed = Math.imul(seed, mult) >>> 0 // bound to uint32
+    seed = (seed + (i + 1)) >>> 0
+    state[i] = seed
+  }
+  // state[3] remains 0x03DF95B3
+```
+
+* If the seed is zero, you get the fixed default state.
+* Otherwise, each of the first three state words is derived from the seed using a 30‑bit right shift, an `imul` (integer multiplication) by `0x6C078965`, and an increment.
+* The fourth state word is always `0x03DF95B3`.
+
+The same seed always leads to the same internal state.
+
+### `next(divisor = 0)`
+
+Generates the next value in the sequence.
+
+#### Behavior:
+
+1. A temporary variable is created by shifting and XORing part of the current state.
+2. The state is rotated forward: each part takes the value of the next.
+3. The final part of the state is updated using additional XOR and shift operations.
+4. The result is either:
+
+   * The new state value (as a `uint32`), or
+   * That value modulo `divisor`, if a `divisor > 0` is supplied.
+
+This advances the generator's state and makes sure every call leads to a *new deterministic value*.
+
+### `initialize(seed)`
+
+Re‑seeds the generator, resetting the internal state in the same way as during initial construction. This allows restarting the sequence or switching to a new one deterministically.
+
+### Internal State
+
+The internal state consists of four 32‑bit values that together represent the generator’s full 128‑bit memory. Every call to `next()` modifies this state, and the generator's output depends entirely on it.
+
+### Example Behavior
+
+If seeded with the same number:
+
+```js
+A = new Xorshift(12345)
+B = new Xorshift(12345)
+A.next() === B.next()  // true
+```
+
+If called repeatedly:
+
+```js
+R = new Xorshift(42)
+R.next()  // → some 32-bit number
+R.next()  // → another number, always the same given the same seed
+```
+
+If using a divisor:
+
+```js
+R = new Xorshift(42)
+R.next(10)  // always returns a value between 0 and 9
+```
+
+---
+
 # Header Files (head.yw)
 These are decrypted in the same way as YW1 saves. Meaning that they are decrypted as if they were a v1.0 save, but without the AES encryption at ALL, just `YWCipher`. Here is an example from Togenyan and NobodyF34R's YW1 Save Editor:
 
