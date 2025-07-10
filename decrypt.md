@@ -322,8 +322,10 @@ SaveManager::loadFile(QString path)
 ```
 
 ### n123git (me, JS)
-* AES-CCM (from my save editor but without unneeded bloat):
+* AES-CCM (from my save editor but without unneeded bloat):<br/>
+
 ```js
+
 /* Note:
 *  This uses SJCL (Standard Javascript Crypto Library) if it didnt - this example would be longer than my brain could comprehend
 * (took embarrasingly long to find a web-compatible crypto lib that supported CCM mode).
@@ -390,8 +392,11 @@ SaveManager::loadFile(QString path)
         return null;
       }
     }
+
 ```
-* Version Detection (psuedocode this time):
+
+* Version Detection (psuedocode this time):<br/>
+
 ```js
 function masterdecrypt(savefile, head) {
     try {
@@ -406,6 +411,7 @@ function masterdecrypt(savefile, head) {
     }
 }
 ```
+
 ---
 
 # Header Files (head.yw)
