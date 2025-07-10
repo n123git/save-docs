@@ -39,61 +39,6 @@ The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to rem
 * Identical to that of v1 saves *but*:
   * The AESkey is no longer fixed, it is instead loaded from the `head.yw`.
 
-
-Here is an example depicting the general decryption process (again from Togenyan's save editor, but slightly readjusted. MIT license is goated). 
-
-```cpp
-Error::ErrorCode SaveManager::loadFile(QString path)
-{
-    QFile file(path);
-
-    if (!file.open(QIODevice::ReadOnly)) { // Error handling, ignore this
-        return Error::FILE_CANNOT_OPEN;
-    }
-
-    QByteArray bodydata = file.readAll(); // get the file.... not really complicated
-    file.close();
-
-    // key
-    QByteArray nonce;
-
-    // decrypt first layer (AES CCM)
-    nonce = bodydata.left(0x0C); // get the nonce
-    CCMCipher myCCM(this->aeskey, nonce); // the aeskey depends, read the previous example for more info.
-    QByteArray *decryptedFirst = myCCM.decrypt(bodydata.right(bodydata.size() - 0x10));
-    if (!decryptedFirst) {
-        return Error::DECRYPTION_CCM_FAILED;
-    }
-
-    // decrypt second layer (YWCipher)
-    QByteArray ywkeyBytes = decryptedFirst->right(4);
-    QByteArray *decryptedSecond = SaveManager::processYW(*decryptedFirst, false);
-    delete decryptedFirst;
-    if (!decryptedSecond) {
-        return Error::DECRYPTION_YW_FAILED;
-    }
-
-    // strip CRC + key
-    decryptedSecond->resize(decryptedSecond->size() - 8);
-
-    // split into sections
-    Error::ErrorCode status = this->parseSavedata(*decryptedSecond);
-
-    delete decryptedSecond;
-    if (status != Error::SUCCESS) {
-        return status;
-    }
-
-    // loaded successfully
-    this->filepath = path;
-    this->nonce = nonce;
-    this->ywcipherKey = ywkeyBytes;
-    this->isLoaded = true;
-
-    return Error::SUCCESS;
-}
-```
-
 ## YWCipher
 **Inputs:**
 
@@ -169,7 +114,7 @@ This method performs both **encryption and decryption**, since the cipher is **s
      out[idx] = data[idx] ^ kb;
      ```
 
-### `Xorshift` PRNG
+### Xorshift PRNG <!-- such a shame that code blocks look AWFUL in headers also why is this highlighted?? oh nice it isnt rendered just syntax highlighting being weird -->
 
 **Xorshift** is a [*deterministic*](https://en.wikipedia.org/wiki/Deterministic_system) 128‑bit [xorshift](https://en.wikipedia.org/wiki/Xorshift) PRNG class that uses a 128‑bit internal state and updates it through bitwise ops. It creates a repeatable sequence of `uint32`s and optionally supports bounded output.
 
@@ -217,7 +162,7 @@ initialize(seed):
 
 The same seed always leads to the same internal state.
 
-### `next(divisor = 0)`
+### next(divisor = 0)
 
 Generates the next value in the sequence.
 
@@ -233,7 +178,7 @@ Generates the next value in the sequence.
 
 This advances the generator's state and makes sure every call leads to a *new deterministic value*.
 
-### `initialize(seed)`
+### initialize(seed)
 
 Re‑seeds the generator, resetting the internal state in the same way as during initial construction. This allows restarting the sequence or switching to a new one deterministically.
 
@@ -321,6 +266,58 @@ if (status != Error::SUCCESS) { // if it fails
    QMessageBox::critical(this, tr("ERROR"), QString(tr("ERROR (%1)")).arg(status)); // have a tantrum
    setAeskey(prevKey); // restore the key
    return; // exit
+}
+```
+
+* General Decryption Process (slightly readjusted from the original):
+```cpp
+SaveManager::loadFile(QString path)
+{
+    // assume file exists
+
+    if (!file.open(QIODevice::ReadOnly)) { // Error handling, ignore this
+        return Error::FILE_CANNOT_OPEN;
+    }
+
+    // bodydata = file
+
+    // key
+    QByteArray nonce;
+
+    // decrypt first layer (AES CCM)
+    nonce = bodydata.left(0x0C); // get the nonce
+    CCMCipher myCCM(this->aeskey, nonce); // the aeskey depends, read the previous example for more info.
+    QByteArray *decryptedFirst = myCCM.decrypt(bodydata.right(bodydata.size() - 0x10));
+    if (!decryptedFirst) {
+        return Error::DECRYPTION_CCM_FAILED;
+    }
+
+    // decrypt second layer (YWCipher)
+    QByteArray ywkeyBytes = decryptedFirst->right(4);
+    QByteArray *decryptedSecond = SaveManager::processYW(*decryptedFirst, false);
+    delete decryptedFirst;
+    if (!decryptedSecond) {
+        return Error::DECRYPTION_YW_FAILED;
+    }
+
+    // strip CRC + key
+    decryptedSecond->resize(decryptedSecond->size() - 8);
+
+    // split into sections
+    Error::ErrorCode status = this->parseSavedata(*decryptedSecond);
+
+    delete decryptedSecond;
+    if (status != Error::SUCCESS) {
+        return status;
+    }
+
+    // loaded successfully
+    this->filepath = path;
+    this->nonce = nonce;
+    this->ywcipherKey = ywkeyBytes;
+    this->isLoaded = true;
+
+    return Error::SUCCESS;
 }
 ```
 
