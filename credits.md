@@ -1,7 +1,7 @@
 ---
 parent: Save Docs!
 layout: default
-nav_order: 4
+nav_order: 999
 title: Credits (thanks everyone :3)
 ---
 
