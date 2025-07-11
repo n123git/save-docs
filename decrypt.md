@@ -9,11 +9,12 @@ title: Decryption/Encryption
 
 First you must understand the structure of `game*.yw` files:
 
-* Nonce (12 bytes) — at offset `0x00`.
+* Nonce (12 bytes) — at offset `0x00`-`0x0C`.
 * MAC (16 bytes) — from `0x0C` to `0x1C` (used internally during decryption).
-* Ciphertext — from offset `0x10` onward (includes MAC at the front).
+* Ciphertext — from offset `0x0C` onwards (includes MAC at the front).
 * AESkey (16 bytes) - the value and location depends on the save file version - more on this further in the doc.
 * Save files are encrypted using `AES-CCM` and a proprietary [*symmetric*](https://en.wikipedia.org/wiki/Symmetric-key_algorithm) (symmetric in that decryption = encryption) cipher which this doc will refer to as `YWCipher` - inspired by Togenyan's naming schema.
+* All data is *little endian* unless specified otherwise.
 
 ## v0.0 Save Files
 The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to remove it).
@@ -26,15 +27,15 @@ The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to rem
 * This can be programatically detected by checking if the fixed key AES-CCM decryption fails due to an incorrect authentication tag.
 
 ### Method
-* These are first decrypted via AES-CCM (not GCM or CTR) and the AESkey is fixed in v1.0 saves: (the UTF-8 representation of "5+NI8WVq09V7LI5w").
+* These are first decrypted via AES-CCM (not GCM or CTR). Also note that the AESkey is fixed in v1.0 saves: (the UTF-8 representation of "5+NI8WVq09V7LI5w").
   * Note that since the ciphertext is formatted [mac][data], you may have to rearrange it depending on your crypto lib.
 * Then, you extract (store and remove) the CRC and the key from last 8 bytes from the input - where the last 8 bytes are formatted [CRC 32-bit][KEY 32-bit].
-* Then you (this is REALLY important and will save you from a **major** headache) verify the data matches the CRC before running it through `0x1000` (4096) rounds of `YWCipher` and reappending the CRC and key for encryption.
-
+* Then you (and this is REALLY important and will save you from a **major** headache) verify the data matches the CRC via *any* standard CRC32 implementation. Then run it through `0x1000` (4096) rounds of `YWCipher` before reappending the CRC and key exactly how it was earlier for encryption.
 
 ## v2.0 Save Files
 ### Detection
 * This format affects all non-v1 save files.
+
 ### Method
 * Identical to that of v1 saves *but*:
   * The AESkey is no longer fixed, it is instead loaded from the (encrypted) `head.yw`.
@@ -324,6 +325,73 @@ SaveManager::loadFile(QString path)
 }
 ```
 
+* YWCipher Class:<br/>
+
+And for `YWCipher`, the exact specifics can be found here (again from Togenyan):
+
+```cpp
+﻿#pragma execution_character_set("utf-8")
+
+#include "ywcipher.h"
+
+const qint32 YWCipher::oddPrimes[] = {
+    3,    5,    7,   11,   13,   17,   19,   23,   29,   31,   37,   41,   43,   47,   53,   59,
+   61,   67,   71,   73,   79,   83,   89,   97,  101,  103,  107,  109,  113,  127,  131,  137,
+  139,  149,  151,  157,  163,  167,  173,  179,  181,  191,  193,  197,  199,  211,  223,  227,
+  229,  233,  239,  241,  251,  257,  263,  269,  271,  277,  281,  283,  293,  307,  311,  313,
+  317,  331,  337,  347,  349,  353,  359,  367,  373,  379,  383,  389,  397,  401,  409,  419,
+  421,  431,  433,  439,  443,  449,  457,  461,  463,  467,  479,  487,  491,  499,  503,  509,
+  521,  523,  541,  547,  557,  563,  569,  571,  577,  587,  593,  599,  601,  607,  613,  617,
+  619,  631,  641,  643,  647,  653,  659,  661,  673,  677,  683,  691,  701,  709,  719,  727,
+  733,  739,  743,  751,  757,  761,  769,  773,  787,  797,  809,  811,  821,  823,  827,  829,
+  839,  853,  857,  859,  863,  877,  881,  883,  887,  907,  911,  919,  929,  937,  941,  947,
+  953,  967,  971,  977,  983,  991,  997, 1009, 1013, 1019, 1021, 1031, 1033, 1039, 1049, 1051,
+ 1061, 1063, 1069, 1087, 1091, 1093, 1097, 1103, 1109, 1117, 1123, 1129, 1151, 1153, 1163, 1171,
+ 1181, 1187, 1193, 1201, 1213, 1217, 1223, 1229, 1231, 1237, 1249, 1259, 1277, 1279, 1283, 1289,
+ 1291, 1297, 1301, 1303, 1307, 1319, 1321, 1327, 1361, 1367, 1373, 1381, 1399, 1409, 1423, 1427,
+ 1429, 1433, 1439, 1447, 1451, 1453, 1459, 1471, 1481, 1483, 1487, 1489, 1493, 1499, 1511, 1523,
+ 1531, 1543, 1549, 1553, 1559, 1567, 1571, 1579, 1583, 1597, 1601, 1607, 1609, 1613, 1619, 1621
+};
+
+YWCipher::YWCipher(quint32 seed, int count) :
+    Xorshift(seed)
+{
+    for (int i = 0; i < 0x100; i++) {
+        this->table.append(i);
+    }
+
+    for (int i = 0; i < count; i++) {
+        int r = this->next(0x10000);
+        int r1 = r & 0xFF, r2 = (r >> 8) & 0xFF;
+        if (r1 != r2) {
+            r1 = this->table.at(r1);
+            r2 = this->table.at(r2);
+            this->table.swap(r1, r2);
+        }
+    }
+}
+
+QByteArray* YWCipher::encrypt(const QByteArray &in)
+{
+    int ka, kb;
+
+    QByteArray *out = new QByteArray();
+    for (QByteArray::const_iterator i = in.constBegin(); i != in.constEnd(); ++i) {
+        int idx = i - in.constBegin();
+        if (idx % 0x100 == 0) {
+            ka = this->oddPrimes[this->table[(idx & 0xFF00) >> 8]];
+        }
+        kb = this->table[ka * (idx + 1) & 0xFF];
+        out->append((*i) ^kb);
+    }
+    return out;
+}
+
+QByteArray* YWCipher::decrypt(const QByteArray &in) // YWCipher is symetric decrypt = encrypt (this didnt originally confuse me when I read through togenyans code - why would you ask?)
+{
+    return encrypt(in);
+}
+```
 ### n123git (me, JS)
 * AES-CCM (from my save editor but without unneeded bloat):<br/>
 
@@ -418,116 +486,34 @@ function masterdecrypt(savefile, head) {
 ---
 
 # Header Files (head.yw)
-These are decrypted in the same way as YW1 saves. Meaning that they are decrypted as if they were a v1.0 save, but without the AES encryption at ALL, just `YWCipher`. Here is an example from Togenyan and NobodyF34R's YW1 Save Editor:
+These are decrypted in the same way as YW1 saves. Meaning that they are decrypted as if they were a v1.0 save, but without the AES encryption at ALL, just `YWCipher`. Here is a (modified) example from Togenyan and NobodyF34R's YW1 Save Editor:
 
 ```cpp
 Error::ErrorCode SaveManager::loadFile(QString path)
 {
-    QFile file(path);
 
-    QDir dir(QFileInfo(path).absolutePath());
-
-    if (!file.open(QIODevice::ReadOnly)) {
-        return Error::FILE_CANNOT_OPEN;
-    }
-   
-    QByteArray bodydata = file.readAll();
-    file.close();
-
-    // the above isn't important.
+    // cut out the previous unneccessary code but bodydata = file hex via readAll()
 
     // decrypt second layer (YWCipher)
     QByteArray ywkeyBytes = bodydata.right(4); // get the 4 bytes, not bits
     QByteArray *decryptedSecond = SaveManager::processYW(bodydata, false); // decrypt via processYW
-    if (!decryptedSecond) {
-        return Error::DECRYPTION_YW_FAILED;
-    }
+    if (!decryptedSecond) { return Error::DECRYPTION_YW_FAILED; } // error handling - technically not needed but trust me you NEED ERROR HANDLING
 
-    // strip CRC + key
-    decryptedSecond->resize(decryptedSecond->size() - 8); // remove the CRC+key
+    decryptedSecond->resize(decryptedSecond->size() - 8); // strip CRC + key
 
     // split into sections
-    Error::ErrorCode status = this->parseSavedata(*decryptedSecond); // ignore this, this is unimportant for decryption, as it is for SectionID parsing, see my general.md for more info
+    Error::ErrorCode status = this->parseSavedata(*decryptedSecond); // ignore this, this is unimportant for decryption, as it is for SectionID parsing, see the general page for more info
 
-    delete decryptedSecond;
-    if (status != Error::SUCCESS) {
-        return status;
-    }
+    delete decryptedSecond; // clean up
+    if (status != Error::SUCCESS) { return status; }
+    this->filepath = path; this->ywcipherKey = ywkeyBytes; this->isLoaded = true;  // load data
 
-    // loaded successfully
-    this->filepath = path;
-    this->ywcipherKey = ywkeyBytes;
-    this->isLoaded = true;
-    if (bodydata.size() == 47556) { // Switch Saves have a length of 47556 BYTES, 3DS saves do not.
+    if (bodydata.size() == 47556) { // Switch Saves have a length of 47556 BYTES, 3DS saves do not. This only covers YW2 and therefore the 3DS games ONLY
         this->isModern = true;
     } else {
         this->isModern = false;
     }
 
     return Error::SUCCESS;
-}
-```
-And for `YWCipher`, the exact specifics can be found here (again from Togenyan):
-```cpp
-﻿#pragma execution_character_set("utf-8")
-
-#include "ywcipher.h"
-
-const qint32 YWCipher::oddPrimes[] = {
-    3,    5,    7,   11,   13,   17,   19,   23,   29,   31,   37,   41,   43,   47,   53,   59,
-   61,   67,   71,   73,   79,   83,   89,   97,  101,  103,  107,  109,  113,  127,  131,  137,
-  139,  149,  151,  157,  163,  167,  173,  179,  181,  191,  193,  197,  199,  211,  223,  227,
-  229,  233,  239,  241,  251,  257,  263,  269,  271,  277,  281,  283,  293,  307,  311,  313,
-  317,  331,  337,  347,  349,  353,  359,  367,  373,  379,  383,  389,  397,  401,  409,  419,
-  421,  431,  433,  439,  443,  449,  457,  461,  463,  467,  479,  487,  491,  499,  503,  509,
-  521,  523,  541,  547,  557,  563,  569,  571,  577,  587,  593,  599,  601,  607,  613,  617,
-  619,  631,  641,  643,  647,  653,  659,  661,  673,  677,  683,  691,  701,  709,  719,  727,
-  733,  739,  743,  751,  757,  761,  769,  773,  787,  797,  809,  811,  821,  823,  827,  829,
-  839,  853,  857,  859,  863,  877,  881,  883,  887,  907,  911,  919,  929,  937,  941,  947,
-  953,  967,  971,  977,  983,  991,  997, 1009, 1013, 1019, 1021, 1031, 1033, 1039, 1049, 1051,
- 1061, 1063, 1069, 1087, 1091, 1093, 1097, 1103, 1109, 1117, 1123, 1129, 1151, 1153, 1163, 1171,
- 1181, 1187, 1193, 1201, 1213, 1217, 1223, 1229, 1231, 1237, 1249, 1259, 1277, 1279, 1283, 1289,
- 1291, 1297, 1301, 1303, 1307, 1319, 1321, 1327, 1361, 1367, 1373, 1381, 1399, 1409, 1423, 1427,
- 1429, 1433, 1439, 1447, 1451, 1453, 1459, 1471, 1481, 1483, 1487, 1489, 1493, 1499, 1511, 1523,
- 1531, 1543, 1549, 1553, 1559, 1567, 1571, 1579, 1583, 1597, 1601, 1607, 1609, 1613, 1619, 1621
-};
-
-YWCipher::YWCipher(quint32 seed, int count) :
-    Xorshift(seed)
-{
-    for (int i = 0; i < 0x100; i++) {
-        this->table.append(i);
-    }
-
-    for (int i = 0; i < count; i++) {
-        int r = this->next(0x10000);
-        int r1 = r & 0xFF, r2 = (r >> 8) & 0xFF;
-        if (r1 != r2) {
-            r1 = this->table.at(r1);
-            r2 = this->table.at(r2);
-            this->table.swap(r1, r2);
-        }
-    }
-}
-
-QByteArray* YWCipher::encrypt(const QByteArray &in)
-{
-    int ka, kb;
-
-    QByteArray *out = new QByteArray();
-    for (QByteArray::const_iterator i = in.constBegin(); i != in.constEnd(); ++i) {
-        int idx = i - in.constBegin();
-        if (idx % 0x100 == 0) {
-            ka = this->oddPrimes[this->table[(idx & 0xFF00) >> 8]];
-        }
-        kb = this->table[ka * (idx + 1) & 0xFF];
-        out->append((*i) ^kb);
-    }
-    return out;
-}
-
-QByteArray* YWCipher::decrypt(const QByteArray &in) // YWCipher is symetric decrypt = encrypt (this didnt originally confuse me when I read through togenyans code - why would you ask?)
-{
-    return encrypt(in);
 }
 ```
