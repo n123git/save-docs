@@ -50,7 +50,26 @@ Here is a basic example of an entry in that tree (values are in hex because ye):
 | ...    | ...                                                     | Data. Can be nested.                   |
 | 0x1153C| `FF FE`                                                 | End Marker (0xFEFF)                    |
 
-Here is a basic JS tool to parse SectionIDs taken from an old version of my save editor:
+
+## Misc Notes
+
+`game*.yw` contains encryption data **before** and **after** the first top-level `Section`. This data is accessed via **absolute** offsets, and is therefore not relative to any `Section`. In *Yo-kai Watch 2*, there are exactly **32 bytes (`0x20`) before** the first `Section` start marker.
+
+# **Common Data Types**
+Data is usually stored as either an integers (usually signed) or text (see Reigonal Differences for encoding information). For a large series of binary data, bitmasks are used. Examples include Trophies and Unlocked Win Poses. A bitmask is a series of bits used to represent... well a series of booleans compactly i.e.
+(Arbitrary binary length, DO NOT USE THE LENGTH FOR REFERENCE)
+
+00000000000000000000 → No trophies<br/>
+11111111111111111111 → All trophies<br/>
+10000000000000000001 → First and last trophy only
+
+Also note that all IDs are saved as their CRC-32 Checksum. An example of this is location; your Location is stored as the CRC-32 Checksum of it's file name. A list of all the file names can be found [here](https://tcrf.net/Notes:Yo-kai_Watch_2). Other examples include Items and Yo-kai.
+
+## Reigonal Differences:
+* JP copies use cp932 (known as Code Page 932 or Windows 31-J) for text - which is an extension of SHIFT_JIS, whereas international save files use UTF-8. They both have ASCII compatibility (not extended ASCII). So the problem is usually more evident using the international system for JP saves than the other way around.
+
+## Code Examples
+* SectionID parsing code (taken from an old version of my save editor):
 ```js
 
 (function (global) {
@@ -202,23 +221,6 @@ global.genOffset = {
 })(window);
 
 ```
-## Misc Notes
-
-`game*.yw` contains encryption data **before** and **after** the first top-level `Section`. This data is accessed via **absolute** offsets, and is therefore not relative to any `Section`. In *Yo-kai Watch 2*, there are exactly **32 bytes (`0x20`) before** the first `Section` start marker.
-
-# **Common Data Types**
-Data is usually stored as either an integers (usually signed) or text (see Reigonal Differences for encoding information). For a large series of binary data, bitmasks are used. Examples include Trophies and Unlocked Win Poses. A bitmask is a series of bits used to represent... well a series of booleans compactly i.e.
-(Arbitrary binary length, DO NOT USE THE LENGTH FOR REFERENCE)
-
-00000000000000000000 → No trophies<br/>
-11111111111111111111 → All trophies<br/>
-10000000000000000001 → First and last trophy only
-
-Also note that all IDs are saved as their CRC-32 Checksum. An example of this is location; your Location is stored as the CRC-32 Checksum of it's file name. A list of all the file names can be found [here](https://tcrf.net/Notes:Yo-kai_Watch_2). Other examples include Items and Yo-kai.
-
-## Reigonal Differences:
-* JP copies use cp932 (known as Code Page 932 or Windows 31-J) for text - which is an extension of SHIFT_JIS, whereas international save files use UTF-8. They both have ASCII compatibility (not extended ASCII). So the problem is usually more evident using the international system for JP saves than the other way around.
-
 
 ## Unconfirmed
 - After a h2 there is always 32 bytes (`0x20`) to skip past. This is correct for Key Items and Yo-kai.
