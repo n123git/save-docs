@@ -37,7 +37,7 @@ The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to rem
 * This format affects all non-v1 save files.
 ### Method
 * Identical to that of v1 saves *but*:
-  * The AESkey is no longer fixed, it is instead loaded from the `head.yw`.
+  * The AESkey is no longer fixed, it is instead loaded from the (encrypted) `head.yw`.
 
 ## YWCipher
 **Inputs:**
@@ -215,7 +215,8 @@ R.next(10)  // always returns a value between 0 and 9
 ## Examples
 ### Togenyan (C++)
 Note: I am *NOT* togenyan, in the credits page you should find a link to his github and the appropriate license.
-* AES-CCM: 
+* AES-CCM:<br/>
+
 ```cpp
 static const int TAG_SIZE = 16;
 
@@ -252,7 +253,8 @@ QByteArray *CCMCipher::decrypt(const QByteArray &in)
 }
 ```
 
-* Version Detection:
+* Version Detection:<br/>
+
 ```cpp
 setAeskey("5+NI8WVq09V7LI5w"); // test with the hardcoded key used in v1.0 saves
 if ((status = loadFile(file)) != Error::SUCCESS) { // If that fails, assume Ganso / Honke ver 2.x OR Shin'uchi
@@ -269,7 +271,8 @@ if (status != Error::SUCCESS) { // if it fails
 }
 ```
 
-* General Decryption Process (slightly readjusted from the original):
+* General Decryption Process (slightly readjusted from the original):<br/>
+
 ```cpp
 SaveManager::loadFile(QString path)
 {
