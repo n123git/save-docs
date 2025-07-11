@@ -69,7 +69,8 @@ Also note that all IDs are saved as their CRC-32 Checksum. An example of this is
 * JP copies use cp932 (known as Code Page 932 or Windows 31-J) for text - which is an extension of SHIFT_JIS, whereas international save files use UTF-8. They both have ASCII compatibility (not extended ASCII). So the problem is usually more evident using the international system for JP saves than the other way around.
 
 ## Code Examples
-* SectionID parsing code (taken from an old version of my save editor):
+* SectionID parsing code (taken from an old version of my save editor):<br/>
+
 ```js
 
 (function (global) {
