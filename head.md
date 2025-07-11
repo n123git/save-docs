@@ -4,6 +4,10 @@ layout: default
 nav_order: 999
 title: Header Files
 ---
+
+NOTE@ REVAMP THIS FIX INCORRECT INFO LORME IPSUM BLA BLA
+
+<!--
 This page documents Header files (also known as `head.yw`). Note that each game has 3 save files (`game*.yw`) but ONE `head.yw` which has data for all three
 
 <sup>Disclaimer: **Most** changes to the `head.yw` only affect the preview you see before you enter the save file, NOT the actual save file (This is very important, dont forget :P). Exceptions to this rule include the save file names, and decryption seed.</sup>
@@ -61,3 +65,5 @@ Then Int/Uint16 Year followed by LEB/ULEB128 Day, LEB/ULEB128 OR INT8/UINT8 Mont
 53B8-53D2
 
 53C0-53D0
+
+-->
