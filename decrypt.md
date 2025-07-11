@@ -30,7 +30,8 @@ The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to rem
 * These are first decrypted via AES-CCM (not GCM or CTR). Also note that the AESkey is fixed in v1.0 saves: (the UTF-8 representation of "5+NI8WVq09V7LI5w").
   * Note that since the ciphertext is formatted [mac][data], you may have to rearrange it depending on your crypto lib.
 * Then, you extract (store and remove) the CRC and the key from last 8 bytes from the input - where the last 8 bytes are formatted [CRC 32-bit][KEY 32-bit].
-* Then you (and this is REALLY important and will save you from a **major** headache) verify the data matches the CRC via *any* standard CRC32 implementation. Then run it through `0x1000` (4096) rounds of `YWCipher` before reappending the CRC and key exactly how it was earlier for encryption.
+* Then you (and this is REALLY important and will save you from a **major** headache) verify the data matches the CRC via *any* standard CRC32 implementation.
+* Then run it through `0x1000` (4096) rounds of `YWCipher` before reappending the CRC and key exactly how it was earlier for encryption.
 
 ## v2.0 Save Files
 ### Detection
