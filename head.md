@@ -37,12 +37,7 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 | `0x1B` | 0x01    | Unknown (1 byte)                                                                     |
 | `0x1C` | 0x24    | Unknown (10 bytes)                                                                   |
 | `0x25` | 0x01    | **Watch Rank** (`0x05 = S`, `0x04 = A`, `0x03 = B`, etc.)                            |
-| `0x28` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 1st Yo-kai in the party.          |
-| `0x3C` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 2nd Yo-kai in the party.          |
-| `0x40` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 3rd Yo-kai in the party.          |
-| `0x44` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 4th Yo-kai in the party.          |
-| `0x48` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 5th Yo-kai in the party.          |
-| `0x4C` | 0x04    | The **BaseID** (not **ParamID** like usual) of the final Yo-kai in the party.        |
+| `0x28` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 1st Yo-kai in the party?          |
 | `0x67` | 0x02    | Year (`UInt16`)                                                                      |
 | `0x6B` | 0x01    | Day (`LEB128` or `UInt8`)                                                            |
 | `0x6C` | 0x01    | Month (`LEB128` or `UInt8`)                                                          |
