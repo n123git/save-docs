@@ -39,16 +39,16 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 | `0x25` | 0x01    | **Watch Rank** (`0x05 = S`, `0x04 = A`, `0x03 = B`, etc.)                            |
 | `0x28` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 1st Yo-kai in the party?          |
 | `0x68` | 0x02    | Year (`UInt16`)                                                                      |
-| `0x6B` | 0x01    | Day (`LEB128` or `UInt8`)                                                            |
-| `0x6C` | 0x01    | Month (`LEB128` or `UInt8`)                                                          |
-| `0x6D` | 0x01    | Hour (`LEB128` or `UInt8`)                                                           |
+| `0x6A` | 0x01    | Day (`LEB128` or `UInt8`)                                                            |
+| `0x6B` | 0x01    | Month (`LEB128` or `UInt8`)                                                          |
+| `0x6C` | 0x01    | Hour (`LEB128` or `UInt8`)                                                           |
 | `0x6E` | 0x01    | Minute (`LEB128` or `UInt8`)                                                         |
 | `0x6F` | 0x01`?` | (Optional) Seconds? (`LEB128` or `Uint8`, Not displayed but may be internally used)  |
 
 ## Notes
 The `head.yw` is extremely tolerant of illegal values, it allows illegal names (disallowed unicode characters appear as a black-box), an hour value of 25 and any possible change BUT please note that changing thre encryption keys at `0x0C` can render your save file unusable without brute force recovery.
 
-TO;DO document save file play time, save file location, save file party, save file gender, save file version
+TO;DO document save file play time, save file location,  save file gender, save file version
 
 <!--
 legacy:
