@@ -16,7 +16,7 @@ This is an example of what it may appear like ingame if your entire team was cor
 ![Missing Yo-kai Team in Inventory due to mismatched num entries](assets/yokai_corruptA.png)
 
 ## Hurt Pandles
-This is a result of []. However, this is more serious as it *may* result in actual data loss. This form of corruption is catgeorised by level 0 yokai, with no HP or soul. These are usually either pandles or just yo-kai with a blank icon. Unlike the previous issue the game still considers them Yo-kai.
+This is a result of []. However, this is more serious as it *may* result in actual data loss. This form of corruption is catgeorised by level 0 yokai, with no HP or soul. These are usually either pandles or just yo-kai with a blank icon. Unlike the previous issue the game still considers them Yo-kai. This can cause battles to *immediately* end.
 # Misc
 
 
