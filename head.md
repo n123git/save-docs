@@ -17,7 +17,7 @@ Here are some of the known elements:
 | Offset | Length  | Description                                                                                                    |
 | ------ | ------- | -------------------------------------------------------------------------------------------------------------- |
 | `0x0C` | 0x04    | (Uint32) - A seed ran through a Xorshift-based PRNG to derive an AES encryption key, used to decrypt V2 saves. |
-
+ > #### **⚠️ changing the encryption key can render your save file unrecoverable with current technology (AES-128).**
 
 ## Player Block Positions
 
@@ -27,7 +27,7 @@ Here are some of the known elements:
 | 2       | `0x5418`   | `0x549F` | `0x88` (136) bytes  |
 | 3       | `0x54A0`   | `0x5527` | `0x88` (136) bytes  |
 
-## Save File Dependant (3 per head)
+## Save File Dependent (3 per head)
 Note that the `Offset` in this table assumes the player block is at `0x00` instead of providing all 3 possible positions. A list of player name positions can be found above for reference.
 
 | Offset | Length  | Notes                                                                                          |
@@ -39,15 +39,14 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 | `0x1C` | 0x24    | Unknown (10 bytes)                                                                                   |
 | `0x25` | 0x01    | **Watch Rank** (`0x05 = S`, `0x04 = A`, `0x03 = B`, etc.)                                            |
 | `0x28` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 1st Yo-kai in the party?                          |
-| `0x68` | 0x02    | Year (`UInt16`)                                                                                      |
-| `0x6A` | 0x01    | Day (`LEB128` or `UInt8`)                                                                            |
-| `0x6B` | 0x01    | Month (`LEB128` or `UInt8`)                                                                          |
-| `0x6C` | 0x01    | Hour (`LEB128` or `UInt8`)                                                                           |
-| `0x6E` | 0x01    | Minute (`LEB128` or `UInt8`)                                                                         |
-| `0x6F` | 0x01`?` | (Optional) Seconds? (`LEB128` or `Uint8`, Not displayed but may be internally used)                  |
+| `0x68` | 0x02    | Year                                                                                                 |
+| `0x6A` | 0x01    | Day                                                                                                  |
+| `0x6B` | 0x01    | Month                                                                                                |
+| `0x6C` | 0x01    | Hour                                                                                                 |
+| `0x6E` | 0x01    | Minute                                                                                               |
 
 ## Notes
-The `head.yw` is extremely tolerant of illegal values, it allows illegal names (disallowed unicode characters appear as a black-box), an hour value of 25 and any possible change BUT please note that changing the encryption keys at `0x0C` can render your save file unusable without brute force recovery. And changing certain data incorrectly such as Gender can render your save file unusable - although note that this **IS** recoverable.
+The `head.yw` is extremely tolerant of illegal values, it allows illegal names (disallowed unicode characters appear as a black-box), an hour value of 25 and most changes. And changing certain data incorrectly such as Gender can render your save file unusable - although note that this **IS** recoverable.
 
 TO;DO document save file play time, save file location, save file version
 
