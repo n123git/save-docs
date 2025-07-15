@@ -17,7 +17,7 @@ Here are some of the known elements:
 | Offset | Length  | Description                                                                                                    |
 | ------ | ------- | -------------------------------------------------------------------------------------------------------------- |
 | `0x08` | 0x04    | Some sort of metadata i.e. `02 00 06 00` - **DO NOT CHANGE THIS FOR NOW - WAIT FOR FURTHER RESEARCH**.         |
-| `0x0C` | 0x04    | (Uint32) - A seed ran through a Xorshift-based PRNG to derive an AES encryption key, used to decrypt V2 saves. [More info](../decryption.html). |
+| `0x0C` | 0x04    | (Uint32) - A seed ran through a Xorshift-based PRNG to derive an AES encryption key, used to decrypt V2 saves. [More info](./decryption.html). |
 
 <br/>
  > #### **⚠️ changing the encryption key can render your save file unrecoverable with current technology (AES-128).**
