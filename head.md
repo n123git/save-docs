@@ -33,23 +33,23 @@ Here are some of the known elements:
 ## Save File Dependent (3 per head)
 Note that the `Offset` in this table assumes the player block is at `0x00` instead of providing all 3 possible positions. A list of player name positions can be found above for reference.
 
-| Offset | Length  | Notes                                                                                                                                                                 |
-| ------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0x00` | *dep.*  | Player name (UTF-8 or cp932 depending on region), length depends but the end can be determined by the first instance of `0x00–0x1F` after the name.                          |
-| `0x18` | 0x01    | Gender. **DO NOT EDIT THIS UNTIL FURTHER RESEARCH HAS BEEN CONCLUDED AS IT CAN (WILL) MAKE THE GAME IGNORE YOUR SAVE FILE IF DONE INCORRECTLY!**                      |
-| `0x19` | 0x01    | Metadata - does various things. Note that for now, editing this isn't recommended. (`0xFF`) makes the game think you imported your data from BS/FS on a PS game copy. |
-| `0x1B` | 0x01    | Unknown (1 byte)                                                                                                                                                      |
-| `0x1C` | 0x24    | Unknown (10 bytes)                                                                                                                                                    |
-| `0x24` | 0x01    | **Watch Rank** (`0x05 = S`, `0x04 = A`, `0x03 = B`, etc.)                                                                                                             |
-| `0x28` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 1st Yo-kai in the party?                                                                                           |
-| `0x2C` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 2nd Yo-kai in the party?                                                                                           |
-| `...`  | ...     | ...                                                                                                                                                                   |
-| `0x40` | 0x04    | Play Time (in seconds)                                                                                                                                                | 
-| `0x68` | 0x02    | Last Save Date Year (3DS clock)                                                                                                                                       |
-| `0x6A` | 0x01    | Last Save Date Day (3DS clock)                                                                                                                                        |
-| `0x6B` | 0x01    | Last Save Date Month (3DS clock)                                                                                                                                      |
-| `0x6C` | 0x01    | Last Save Date Hour (3DS clock)                                                                                                                                       |
-| `0x6E` | 0x01    | Last Save Date Minute (3DS clock)                                                                                                                                     |
+| Offset | Length  | Notes                                                                                                                                                                         |
+| ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0x00` | *dep.*  | Player name (UTF-8 or cp932 depending on region), length depends but the end can be determined by the first instance of `0x00–0x1F` after the name. The max length is `0x18`. |
+| `0x18` | 0x01    | Gender. **DO NOT EDIT THIS UNTIL FURTHER RESEARCH HAS BEEN CONCLUDED AS IT CAN (WILL) MAKE THE GAME IGNORE YOUR SAVE FILE IF DONE INCORRECTLY!**                              |
+| `0x19` | 0x01    | Metadata - does various things. Note that for now, editing this isn't recommended. (`0xFF`) makes the game think you imported your data from BS/FS on a PS game copy.         |
+| `0x1B` | 0x01    | Unknown (1 byte)                                                                                                                                                              |
+| `0x1C` | 0x24    | Unknown (10 bytes)                                                                                                                                                            |
+| `0x24` | 0x01    | **Watch Rank** (`0x05 = S`, `0x04 = A`, `0x03 = B`, etc.)                                                                                                                     |
+| `0x28` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 1st Yo-kai in the party?                                                                                                   |
+| `0x2C` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 2nd Yo-kai in the party?                                                                                                   |
+| `...`  | ...     | ...                                                                                                                                                                           |
+| `0x40` | 0x04    | Play Time (in seconds)                                                                                                                                                        | 
+| `0x68` | 0x02    | Last Save Date Year (3DS clock)                                                                                                                                               |
+| `0x6A` | 0x01    | Last Save Date Day (3DS clock)                                                                                                                                                |
+| `0x6B` | 0x01    | Last Save Date Month (3DS clock)                                                                                                                                              |
+| `0x6C` | 0x01    | Last Save Date Hour (3DS clock)                                                                                                                                               |
+| `0x6E` | 0x01    | Last Save Date Minute (3DS clock)                                                                                                                                             |
 
 ## Notes
 The `head.yw` is extremely tolerant of illegal values, it allows illegal names (invalid code points appear as a black-box), an hour value of 25 and most changes. And changing certain data incorrectly such as Gender can render your save file unusable - although note that this **IS** recoverable. **Most** changes to the `head.yw` only affect the preview you see *before* you enter the save file, NOT the actual save file (This is very important, dont forget :P) and often reset to their true state when the game is saved. Exceptions to this rule include the save file names, gender and decryption seed which actually affect behaviour and apply *permenantly*.
