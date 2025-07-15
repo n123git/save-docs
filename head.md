@@ -14,41 +14,42 @@ Here are some of the known elements:
 
 ## Fixed Elements (1 per head)
 
-| Offset | Length  | Description                                                                          |
-| ------ | ------- | ------------------------------------------------------------------------------------ |
+| Offset | Length  | Description                                                                                                    |
+| ------ | ------- | -------------------------------------------------------------------------------------------------------------- |
 | `0x0C` | 0x04    | (Uint32) - A seed ran through a Xorshift-based PRNG to derive an AES encryption key, used to decrypt V2 saves. |
 
 
 ## Player Block Positions
 
-| Block # | Start Addr | End Addr | Size      |
-| ------- | ---------- | -------- | --------- |
-| 1       | `0x5390`   | `0x5417` | 136 bytes |
-| 2       | `0x5418`   | `0x549F` | 136 bytes |
-| 3       | `0x54A0`   | `0x5527` | 136 bytes |
+| Block # | Start Addr | End Addr | Block Length        |
+| ------- | ---------- | -------- | ------------------- |
+| 1       | `0x5390`   | `0x5417` | `0x88` (136) bytes  |
+| 2       | `0x5418`   | `0x549F` | `0x88` (136) bytes  |
+| 3       | `0x54A0`   | `0x5527` | `0x88` (136) bytes  |
 
 ## Save File Dependant (3 per head)
 Note that the `Offset` in this table assumes the player block is at `0x00` instead of providing all 3 possible positions. A list of player name positions can be found above for reference.
 
-| Offset | Length  | Description                                                                          |
-| ------ | ------- | ------------------------------------------------------------------------------------ |
-| `0x00` | 0x08    | Player name (UTF-8 or cp932 depending on region), fixed length 8 bytes (padded with `00` if shorter)|
-| `0x09` | 0x1A    | Unknown (18 bytes)                                                                   |
-| `0x1B` | 0x01    | Unknown (1 byte)                                                                     |
-| `0x1C` | 0x24    | Unknown (10 bytes)                                                                   |
-| `0x25` | 0x01    | **Watch Rank** (`0x05 = S`, `0x04 = A`, `0x03 = B`, etc.)                            |
-| `0x28` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 1st Yo-kai in the party?          |
-| `0x68` | 0x02    | Year (`UInt16`)                                                                      |
-| `0x6A` | 0x01    | Day (`LEB128` or `UInt8`)                                                            |
-| `0x6B` | 0x01    | Month (`LEB128` or `UInt8`)                                                          |
-| `0x6C` | 0x01    | Hour (`LEB128` or `UInt8`)                                                           |
-| `0x6E` | 0x01    | Minute (`LEB128` or `UInt8`)                                                         |
-| `0x6F` | 0x01`?` | (Optional) Seconds? (`LEB128` or `Uint8`, Not displayed but may be internally used)  |
+| Offset | Length  | Description                                                                                          |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------- |
+| `0x00` | 0x08    | Player name (UTF-8 or cp932 depending on region), fixed length 8 bytes (padded with `00` if shorter) |
+| `0x18` | 0x01    | Gender. **DO NOT EDIT THIS UNTIL FURTHER RESEARCH HAS BEEN CONCLUDED!**                              |
+| `0x19` | 0x01    | Metadata - does various things. Note that for now, editing this isn't recommended.                   |
+| `0x1B` | 0x01    | Unknown (1 byte)                                                                                     |
+| `0x1C` | 0x24    | Unknown (10 bytes)                                                                                   |
+| `0x25` | 0x01    | **Watch Rank** (`0x05 = S`, `0x04 = A`, `0x03 = B`, etc.)                                            |
+| `0x28` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 1st Yo-kai in the party?                          |
+| `0x68` | 0x02    | Year (`UInt16`)                                                                                      |
+| `0x6A` | 0x01    | Day (`LEB128` or `UInt8`)                                                                            |
+| `0x6B` | 0x01    | Month (`LEB128` or `UInt8`)                                                                          |
+| `0x6C` | 0x01    | Hour (`LEB128` or `UInt8`)                                                                           |
+| `0x6E` | 0x01    | Minute (`LEB128` or `UInt8`)                                                                         |
+| `0x6F` | 0x01`?` | (Optional) Seconds? (`LEB128` or `Uint8`, Not displayed but may be internally used)                  |
 
 ## Notes
-The `head.yw` is extremely tolerant of illegal values, it allows illegal names (disallowed unicode characters appear as a black-box), an hour value of 25 and any possible change BUT please note that changing thre encryption keys at `0x0C` can render your save file unusable without brute force recovery.
+The `head.yw` is extremely tolerant of illegal values, it allows illegal names (disallowed unicode characters appear as a black-box), an hour value of 25 and any possible change BUT please note that changing the encryption keys at `0x0C` can render your save file unusable without brute force recovery. And changing certain data incorrectly such as Gender can render your save file unusable - although note that this **IS** recoverable.
 
-TO;DO document save file play time, save file location,  save file gender, save file version
+TO;DO document save file play time, save file location, save file version
 
 <!--
 legacy:
