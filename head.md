@@ -33,8 +33,8 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 | Offset | Length  | Description                                                                                          |
 | ------ | ------- | ---------------------------------------------------------------------------------------------------- |
 | `0x00` | 0x08    | Player name (UTF-8 or cp932 depending on region), fixed length 8 bytes (padded with `00` if shorter) |
-| `0x18` | 0x01    | Gender. **DO NOT EDIT THIS UNTIL FURTHER RESEARCH HAS BEEN CONCLUDED!**                              |
-| `0x19` | 0x01    | Metadata - does various things. Note that for now, editing this isn't recommended.                   |
+| `0x1x` | 0x01    | Gender. **DO NOT EDIT THIS UNTIL FURTHER RESEARCH HAS BEEN CONCLUDED!**                              |
+| `0x1x + 1` | 0x01    | Metadata - does various things. Note that for now, editing this isn't recommended.                   |
 | `0x1B` | 0x01    | Unknown (1 byte)                                                                                     |
 | `0x1C` | 0x24    | Unknown (10 bytes)                                                                                   |
 | `0x25` | 0x01    | **Watch Rank** (`0x05 = S`, `0x04 = A`, `0x03 = B`, etc.)                                            |
