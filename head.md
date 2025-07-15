@@ -5,7 +5,7 @@ nav_order: 4
 title: Header Files
 ---
 
-This page documents Header Files (also known as `head.yw`) for V2.0 saves. Note that each game has 3 save files (`game*.yw`) but only ONE header (`head.yw`) which contains the data for all save files.
+This page documents Header files (also known as `head.yw`) for V2.0 saves. Note that each game has 3 save files (`game*.yw`) but only ONE header (`head.yw`) which contains the data for all save files.
 
 <sup>Disclaimer: **Most** changes to the `head.yw` only affect the preview you see before you enter the save file, NOT the actual save file (This is very important, dont forget :P). Exceptions to this rule include the save file names, and decryption seed.</sup><br/>
 The `head.yw` has 3 "player blocks" - with each corresponding to a different save file. Some things however, are the same for all save files and are therefore not in a player block. For example the seed located in the head file at `0x0C`. Despite head files using a SectionID system there is only one Section: Section ID 248 (`F8`) meaning that a direct offset can be used - which for simplicity is used in this doc.
