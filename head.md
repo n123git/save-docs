@@ -30,7 +30,7 @@ Here are some of the known elements:
 ## Save File Dependant (3 per head)
 Note that the `Offset` in this table assumes the player block is at `0x00` instead of providing all 3 possible positions. A list of player name positions can be found above for reference.
 
-| Offset | Length  | Description                                                                                          |
+| Offset | Length  | Notes                                                                                          |
 | ------ | ------- | ---------------------------------------------------------------------------------------------------- |
 | `0x00` | 0x08    | Player name (UTF-8 or cp932 depending on region), fixed length 8 bytes (padded with `00` if shorter) |
 | `0x1x` | 0x01    | Gender. **DO NOT EDIT THIS UNTIL FURTHER RESEARCH HAS BEEN CONCLUDED!**                              |
