@@ -16,7 +16,8 @@ Here are some of the known elements:
 
 | Offset | Length  | Description                                                                                                    |
 | ------ | ------- | -------------------------------------------------------------------------------------------------------------- |
-| `0x0C` | 0x04    | (Uint32) - A seed ran through a Xorshift-based PRNG to derive an AES encryption key, used to decrypt V2 saves. |
+| `0x08` | 0x04    | Some sort of metadata i.e. `02 00 06 00` - **DO NOT CHANGE THIS FOR NOW - WAIT FOR FURTHER RESEARCH**.         |
+| `0x0C` | 0x04    | (Uint32) - A seed ran through a Xorshift-based PRNG to derive an AES encryption key, used to decrypt V2 saves. [More info](../decryption.html). |
 
 <br/>
  > #### **⚠️ changing the encryption key can render your save file unrecoverable with current technology (AES-128).**
@@ -35,7 +36,7 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 | Offset | Length  | Notes                                                                                          |
 | ------ | ------- | ---------------------------------------------------------------------------------------------------- |
 | `0x00` | 0x08    | Player name (UTF-8 or cp932 depending on region), fixed length 8 bytes (padded with `00` if shorter) |
-| `0x18` | 0x01    | Gender. **DO NOT EDIT THIS UNTIL FURTHER RESEARCH HAS BEEN CONCLUDED!**                              |
+| `0x18` | 0x01    | Gender. **DO NOT EDIT THIS UNTIL FURTHER RESEARCH HAS BEEN CONCLUDED AS IT CAN (WILL) MAKE THE GAME IGNORE YOUR SAVE FILE IF DONE INCORRECTLY!**|
 | `0x19` | 0x01    | Metadata - does various things. Note that for now, editing this isn't recommended. (`0xFF`) makes the game think you imported your data from BS/FS on a PS game copy. |
 | `0x1B` | 0x01    | Unknown (1 byte)                                                                                     |
 | `0x1C` | 0x24    | Unknown (10 bytes)                                                                                   |
@@ -53,7 +54,7 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 ## Notes
 The `head.yw` is extremely tolerant of illegal values, it allows illegal names (disallowed unicode characters appear as a black-box), an hour value of 25 and most changes. And changing certain data incorrectly such as Gender can render your save file unusable - although note that this **IS** recoverable. **Most** changes to the `head.yw` only affect the preview you see *before* you enter the save file, NOT the actual save file (This is very important, dont forget :P) and often reset to their true state when the game is saved. Exceptions to this rule include the save file names, gender and decryption seed which actually affect behaviour and apply *permenantly*.
 
-TO;DO document save file play time, save file location, save file version
+TO;DO document save file location, save file version, save origin (1.0, 2.0, PS), save file lang?
 
 <!--
 legacy:
