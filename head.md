@@ -14,12 +14,11 @@ Here are some of the known elements:
 
 ## Fixed Elements (1 per head)
 
-<br/>
 
 | Offset | Length  | Description                                                                                                    |
 | ------ | ------- | -------------------------------------------------------------------------------------------------------------- |
 | `0x0C` | 0x04    | (Uint32) - A seed ran through a Xorshift-based PRNG to derive an AES encryption key, used to decrypt V2 saves. |
-<br/>
+
 
  > #### **⚠️ changing the encryption key can render your save file unrecoverable with current technology (AES-128).**
 
