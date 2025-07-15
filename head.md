@@ -35,7 +35,7 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 
 | Offset | Length  | Notes                                                                                                                                                                         |
 | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0x00` | *dep.*  | Player name (UTF-8 or cp932 depending on region), length depends but the end can be determined by the first instance of `0x00–0x1F` after the name. The max length is `0x18`. |
+| `0x00` | *dep.*  | Player name (UTF-8 or cp932 depending on region), length depends but the end can be determined by the first instance of `00` after the name (if the length isnt `0x18` (max length) - if it is, there will be no terminator. |
 | `0x18` | 0x01    | Gender. **DO NOT EDIT THIS UNTIL FURTHER RESEARCH HAS BEEN CONCLUDED AS IT CAN (WILL) MAKE THE GAME IGNORE YOUR SAVE FILE IF DONE INCORRECTLY!**                              |
 | `0x19` | 0x01    | Metadata - does various things. Note that for now, editing this isn't recommended. (`0xFF`) makes the game think you imported your data from BS/FS on a PS game copy.         |
 | `0x1B` | 0x01    | Unknown (1 byte)                                                                                                                                                              |
