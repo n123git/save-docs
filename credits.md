@@ -8,8 +8,8 @@ title: Credits (thanks everyone :3)
 # General Credits
 
 - [Level-5](https://en.wikipedia.org/wiki/Level-5_(company)) — developers of Yo-kai Watch.
-- [Togenyan](https://github.com/Togenyan) — inspiration and original editor framework.
-- [NobodyF34R](https://github.com/nobodyF34R) - for his YW-ID project, general help and being a chill guy all around.
+- [Togenyan](https://github.com/Togenyan) — inspiration and original editor framework (goated dev btw).
+- [nobodyF34R](https://github.com/nobodyF34R) - for his YW-ID project, general help and being a chill guy all around.
 - [The LovePotion Team](https://lovebrew.org/) - for developing and maintaining the best 3DS game engine.
 - The community — for being chill af.
 
