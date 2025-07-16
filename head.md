@@ -45,6 +45,7 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 | `0x2C` | 0x04    | The **BaseID** (not **ParamID** like usual) of the 2nd Yo-kai in the party?                                                                                                   |
 | `...`  | ...     | ...                                                                                                                                                                           |
 | `0x40` | 0x04    | Play Time (in seconds)                                                                                                                                                        | 
+| `0x58` | 0x04    | Sub-Location Data (Location Names that change without loading zone, they often have a "-" i.e. Harrisville is a location but Harrisville - Gloworm Grove is a sub-location.   | 
 | `0x68` | 0x02    | Last Save Date Year (3DS clock)                                                                                                                                               |
 | `0x6A` | 0x01    | Last Save Date Day (3DS clock)                                                                                                                                                |
 | `0x6B` | 0x01    | Last Save Date Month (3DS clock)                                                                                                                                              |
