@@ -47,10 +47,10 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 | `0x40` | 0x04    | Play Time (in seconds)                                                                                                                                                        | 
 | `0x58` | 0x04    | Sub-Location Data (Location Names that change without loading zone, they often have a "-" i.e. Harrisville is a location but Harrisville - Gloworm Grove is a sub-location.   | 
 | `0x68` | 0x02    | Last Save Date Year (3DS clock)                                                                                                                                               |
-| `0x6A` | 0x01    | Last Save Date Day (3DS clock)                                                                                                                                                |
-| `0x6B` | 0x01    | Last Save Date Month (3DS clock)                                                                                                                                              |
+| `0x6A` | 0x01    | Last Save Date Month (3DS clock)                                                                                                                                              |
+| `0x6B` | 0x01    | Last Save Date Day (3DS clock)                                                                                                                                                |
 | `0x6C` | 0x01    | Last Save Date Hour (3DS clock)                                                                                                                                               |
-| `0x6E` | 0x01    | Last Save Date Minute (3DS clock)                                                                                                                                             |
+| `0x6D` | 0x01    | Last Save Date Minute (3DS clock)                                                                                                                                             |
 
 ## Notes
 The `head.yw` is extremely tolerant of illegal values, it allows illegal names (invalid code points appear as a black-box), an hour value of 25 and most changes. And changing certain data incorrectly such as Gender can render your save file unusable - although note that this **IS** recoverable. **Most** changes to the `head.yw` only affect the preview you see *before* you enter the save file, NOT the actual save file (This is very important, dont forget :P) and often reset to their true state when the game is saved. Exceptions to this rule include the save file names, gender and decryption seed which actually affect behaviour and apply *permenantly*.
