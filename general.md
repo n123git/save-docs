@@ -13,19 +13,23 @@ There are two file types, both in little-endian format for all datapoints unless
 
  * `head.yw` files, these contain the player's name, encryption keys for V2 saves, preview data (all the data seen before you click on a save file) etc. These are encrypted identically to `YW1` save files - see the decrypt page for more. Despite these also using a `SectionID` format - it only has one top-level `Section` leading direct offsets to still work.
 
-> ⚠️ *Modifying preview data is mostly pointless*, as the game will overwrite most of it when saving—exceptions include the player's name, which *can* be edited persistently.<br/>
+> ⚠️ *Modifying the preview data is mostly pointless*, as the game will overwrite most of it when saving - certain exceptions do exist such as the player's name however, which *can* be edited persistently (although this *actually* changes the player's name) - See the Header Files page for more info.<br/>
 
 # **SectionID Format**
 
-These save files are mostly nested sequences of Sections. The `SectionID` structure uses nested sections where each section starts with two 4-byte header words. There are two forms of Header Words:
+Save data in `game*.yw` files is organized into **nested sections**, each defined by a pair of headers:
 
-* `h1` - an `int16` enum which determines whether it's a section start or section end, specifically `0xFFFE` is a Section Start Marker, and `0xFEFF` is a Section End Marker.
-* `h2` - a 4-byte integer (`int16`) with the following structure:
+- **Header 1 (`h1`)**:  
+  A 2-byte `int16` enum to mark section boundaries:
+  - `0xFFFE` = Section Start
+  - `0xFEFF` = Section End
 
-* **Bits 0–7** (LSB) → `Section ID`
-* **Bits 8–31** → `Section Size` in bytes (excluding the 8 bytes of headers, i.e. h1 and h2)
+- **Header 2 (`h2`)**:  
+  A 4-byte value with the structure below:
+  - **Bits 0–7**: Section ID (`uint8`)
+  - **Bits 8–31**: Section size in bytes (excluding the 8 bytes used by `h1` and `h2`)
 
----
+
 
 ## **Section ID (ID)**
 
@@ -58,17 +62,27 @@ Where each Section would be formatted like this:
 
 * A decrypted `game*.ywd` will have data before/after the first top-level section for re-encryption.
 
-# **Common Data Types**
-Data is usually stored as either an integer (usually signed) or text (see Reigonal Differences for encoding information). For a large series of binary data, bitmasks are used. Examples include Trophies, opened Treasure Dhests and unlocked Win Poses. A bitmask is a series of bits used to represent... well a series of booleans compactly i.e. (Arbitrary length - not to scale)
+### **Common Data Types**
+
+- **Integers**: Typically stored as 32-bit signed values - although obviously depends on the datapoint itself.
+  - **IDs**: these are stored as a standard CRC-32 Checksum. An example of this is Location; which is stored as the CRC-32 of it's file name. A list of all the file names can be found [here](https://tcrf.net/Notes:Yo-kai_Watch_2). Other examples include Items and Yo-kai.
+- **Text**: Encoding depends on region (see below).
+- **Bitmasks**: Compact representation of boolean states (example below):
 
 00000000000000000000 → No trophies<br/>
 11111111111111111111 → All trophies<br/>
 10000000000000000001 → First and last trophy only
 
-Also note that all IDs are saved as their CRC-32 Checksum. An example of this is location; your Location is stored as the CRC-32 Checksum of it's file name. A list of all the file names can be found [here](https://tcrf.net/Notes:Yo-kai_Watch_2). Other examples include Items and Yo-kai.
+Used for data like:
+- Trophies
+- Opened treasure chests
+- Unlocked win poses<br/>
+etc
+
+
 
 ## Reigonal Differences:
-* JP copies use cp932 (known as Code Page 932 or Windows 31-J) for text - which is an extension of SHIFT_JIS, whereas international save files use UTF-8. They both have ASCII compatibility (not extended ASCII). So the problem is usually more evident using the international system for JP saves than the other way around.
+* JP copies use cp932 (known as Code Page 932 or Windows 31-J) for text - which is an extension of SHIFT_JIS, whereas international save files use UTF-8. Since they both have ASCII compatibility (not extended ASCII) - the problem is usually more evident using the international system for JP saves than the other way around.
 
 ## Code Examples
 * SectionID parsing code (taken from an old version of my save editor):<br/>
