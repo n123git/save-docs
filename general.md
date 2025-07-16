@@ -5,11 +5,15 @@ nav_order: 1
 title: General (Read First)
 ---
 
-This page marks the basic layout of *decrypted* save files (with the assumption you understand basic concepts such as endianness, and constructs such as signed integers and bitmasks).
+This page outlines the basic structure of *decrypted* save files.
 
-The Save System is composed of 2 little-endian file types:
- * `game*.yw` files, these hold the main save file data and are named as such (where `game1.yw` is the 1st save file, `game2.yw` is the 2nd, and `game3.yw` is the 3rd. Displayed top to bottom ingame). These store everything aside from the player's name, encryption keys for v2 saves and preview data. It use a `SectionID` format.
- * `head.yw` files, these contain the player's name, encryption keys for V2 saves - along with their preview data (all the data seen before you click on a save file). Editing most of the preview data is pointless as saving will restore it to it's actual value - although this dosen't apply to all properties such as the player's name. These are encrypted identically to `YW1` save files - see the decrypt page for more.
+
+There are two file types, both in little-endian format for all datapoints unless otherwise specified:
+ * `game*.yw` files. These hold the main save data - where the `*` corresponds to the save slot (i.e., `game1.yw` is the first slot, `game2.yw` is the second, etc.). These store nearly everything and use a `SectionID` format.
+
+ * `head.yw` files, these contain the player's name, encryption keys for V2 saves, preview data (all the data seen before you click on a save file) etc. These are encrypted identically to `YW1` save files - see the decrypt page for more. Despite these also using a `SectionID` format - it only has one top-level `Section` leading direct offsets to still work.
+
+> ⚠️ *Modifying preview data is mostly pointless*, as the game will overwrite most of it when saving—exceptions include the player's name, which *can* be edited persistently.<br/>
 
 # **SectionID Format**
 
@@ -26,8 +30,7 @@ These save files are mostly nested sequences of Sections. The `SectionID` struct
 ## **Section ID (ID)**
 
 This is a `Uint8` (0-255) used to uniquely identify the section, kind of like a `UUID`. For instance, `0x06` is the SectionID for Key Items, which is constant, and NEVER varies between save files, despite the exact offset being inconsistent, and therefore cannot directly be used. Each section however *always* contains the same type of data at the same offset *relative* to the start of the section (`FE`).
-
-### Example tree:
+The general structure would look something like this:
 
 ```
 Root (ID: 1, size: 64)
@@ -36,7 +39,7 @@ Root (ID: 1, size: 64)
 └── Child (ID: 6, size: 12)
 ```
 
-Here is a basic example of an entry in that tree (values are in hex because ye):
+Where each Section would be formatted like this:
 
 | Offset | Bytes                                                   | Meaning                                |
 | ------ | ------------------------------------------------------- | -------------------------------------- |
@@ -53,11 +56,10 @@ Here is a basic example of an entry in that tree (values are in hex because ye):
 
 ## Misc Notes
 
-`game*.yw` contains encryption data **before** and **after** the first top-level `Section`. This data is accessed via **absolute** offsets, and is therefore not relative to any `Section`. In *Yo-kai Watch 2*, there are exactly **32 bytes (`0x20`) before** the first `Section` start marker.
+* A decrypted `game*.ywd` will have data before/after the first top-level section for re-encryption.
 
 # **Common Data Types**
-Data is usually stored as either an integers (usually signed) or text (see Reigonal Differences for encoding information). For a large series of binary data, bitmasks are used. Examples include Trophies and Unlocked Win Poses. A bitmask is a series of bits used to represent... well a series of booleans compactly i.e.
-(Arbitrary binary length, DO NOT USE THE LENGTH FOR REFERENCE)
+Data is usually stored as either an integer (usually signed) or text (see Reigonal Differences for encoding information). For a large series of binary data, bitmasks are used. Examples include Trophies, opened Treasure Dhests and unlocked Win Poses. A bitmask is a series of bits used to represent... well a series of booleans compactly i.e. (Arbitrary length - not to scale)
 
 00000000000000000000 → No trophies<br/>
 11111111111111111111 → All trophies<br/>
