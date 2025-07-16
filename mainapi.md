@@ -15,43 +15,73 @@ Anyway, here are the examples :)
 
 ## Examples
 
-Yo-kai Example #1: Fixes IVs of all Yo-kai:
+Yo-kai Example #1: Maxes out the *legal* IVs, EVs, SCs, Level, Attack, Technique and Soul levels along with hp remaining and soul bar:
 ```js
-(function fixYokaiData() { // define an IIFE for no reason (you dont need to do this I just felt like it when I made this example)
-    const yokaiList = getAllYokai(); // get all yokai
-    console.log(`Fixing ${yokaiList.length} Yo-kai...`);
+function randomLegalIVs(yokai, ivTotalTarget = 40) {
+    // Get current IVs to check if its already legal
+    let IV_HP = yokai.get("IV_HP");
+    let IV_Str = yokai.get("IV_Str");
+    let IV_Spr = yokai.get("IV_Spr");
+    let IV_Def = yokai.get("IV_Def");
+    let IV_Spd = yokai.get("IV_Spd");
 
-    let ivTotalTarget = 40; // IV sum
+    let IV_Sum = Math.floor(IV_HP / 2) + IV_Str + IV_Spr + IV_Def + IV_Spd;
 
-    yokaiList.forEach((yokai, index) => { // iterate through - this is kinda obvious
-        let IV_HP = yokai.get("IV_HP"); // get all the Ivs of the current yokai
-        let IV_Str = yokai.get("IV_Str");
-        let IV_Spr = yokai.get("IV_Spr");
-        let IV_Def = yokai.get("IV_Def");
-        let IV_Spd = yokai.get("IV_Spd");
+    // Checks if IV_HP even and sum matches target
+    let needsFix = (IV_HP % 2 !== 0) || (IV_Sum !== ivTotalTarget);
 
-        let IV_Sum = Math.floor(IV_HP / 2) + IV_Str + IV_Spr + IV_Def + IV_Spd; // should be 40 if it has valid IVs - HP is worth half
+    while(needsFix) {
+        // ivs array: [IV_HP/2 units, IV_Str, IV_Spr, IV_Def, IV_Spd]
+        let ivs = [0, 0, 0, 0, 0];
 
-        let needsFix = (IV_HP % 2 !== 0) || (IV_Sum !== ivTotalTarget); // checks if its valid HP must be even since the point goal is 40 and nothing else can be decimal except HP so if HP isnt whole the goal cant be reached - meaning HP must be even
-
-        if (needsFix) {
-            let ivs = [0, 0, 0, 0, 0];
-
-            for (let i = 0; i < ivTotalTarget; ++i) { // good ol trial and error
-                let r = Math.floor(Math.random() * 5);
-                ivs[r]++;
-            }
-
-            yokai.set("IV_HP", ivs[0] * 2); // Even HP
-            yokai.set("IV_Str", ivs[1]);
-            yokai.set("IV_Spr", ivs[2]);
-            yokai.set("IV_Def", ivs[3]);
-            yokai.set("IV_Spd", ivs[4]);
+        // Distribute ivTotalTarget points randomly over 5 stats (IV_HP counted as half units)
+        for (let i = 0; i < ivTotalTarget; ++i) {
+            let r = Math.floor(Math.random() * 5);
+            ivs[r]++;
         }
-    });
 
-    console.log("All done!");
-})();
+        // Set the IVs. Remember that the HP IV is worth half
+        yokai.set("IV_HP", ivs[0] * 2);
+        yokai.set("IV_Str", ivs[1]);
+        yokai.set("IV_Spr", ivs[2]);
+        yokai.set("IV_Def", ivs[3]);
+        yokai.set("IV_Spd", ivs[4]);
+        let needsFix = (IV_HP % 2 !== 0) || (IV_Sum !== ivTotalTarget); // recheck
+    }
+}
+
+// Get the 1st yokai in a lazy way
+let firstYokai = getAllYokai()[0];
+
+// Max level
+firstYokai.set("level", 99); // max level - in comp it gets restricted to lvl60 anyway
+
+// Random legal IVs MUST total 40 points (HP is worth half which indirectly forces HP to be even and usually makes it the highest IV)
+randomLegalIVs(firstYokai);
+
+// Max EVs
+firstYokai.set("EV_HP", 127); // max - the change is minor so everything is considered legal iirc
+firstYokai.set("EV_Str", 127);
+firstYokai.set("EV_Spr", 127);
+firstYokai.set("EV_Def", 127);
+firstYokai.set("EV_Spd", 127);
+
+// Max SCs
+firstYokai.set("SC_Str", 25); // SC goes from -10 to 25
+firstYokai.set("SC_Spr", 25);
+firstYokai.set("SC_Def", 25);
+firstYokai.set("SC_Spd", 25);
+
+// Max HP and Soul
+firstYokai.setHelper.energy.HP.set(32767); // 16-bit int limit (may be signed?)
+firstYokai.setHelper.energy.Soul.set(250); // iirc never goes higher than 150 lol but just to be safe
+
+// Max special unlocks
+firstYokai.setHelper.specialUnlock.attackLevel.set(10); // max level
+firstYokai.setHelper.specialUnlock.techniqueLevel.set(10); // max level
+firstYokai.setHelper.specialUnlock.soultimateLevel.set(10); // max level
+
+console.log("First Yo-kai maxed with legal-ish stats!");
 ```
 
 Yo-kai Example #2: The inner workings of the copy-paste button (requires API v1.1)
