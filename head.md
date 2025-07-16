@@ -55,7 +55,7 @@ Note that the `Offset` in this table assumes the player block is at `0x00` inste
 ## Notes
 The `head.yw` is extremely tolerant of illegal values, it allows illegal names (invalid code points appear as a black-box), an hour value of 25 and most changes. And changing certain data incorrectly such as Gender can render your save file unusable - although note that this **IS** recoverable. **Most** changes to the `head.yw` only affect the preview you see *before* you enter the save file, NOT the actual save file (This is very important, dont forget :P) and often reset to their true state when the game is saved. Exceptions to this rule include the save file names, gender and decryption seed which actually affect behaviour and apply *permenantly*.
 
-TO;DO document save file location, save file version, save origin (1.0, 2.0, PS), save file lang?
+TO;DO document save file version, save origin (1.0, 2.0, PS), save file lang?
 
 <!--
 legacy:
