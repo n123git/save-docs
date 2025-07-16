@@ -259,14 +259,14 @@ Global shortcut functions are available for common operations:
     totalSlots: 100,        // Total available slots
     usedSlots: 45,          // Slots with items
     emptySlots: 55,         // Empty slots
-    uniqueItems: 30,        // Number of unique item types
+    uniqueItems: 30,        // Number of unique item types (should be equal to usedSlots....)
     items: [                // Array of non-empty items
         {
             name: "Yo-kai Watch",
             id: 12345,
-            count: 1
+            count: 1 // should ideally never be 2+
         }
-        // ... more items
+        // ... more items here lol
     ]
 }
 ```
@@ -286,7 +286,7 @@ watches.forEach(watch => {
     console.log(`${watch.name} at slot ${watch.index}`);
 });
 
-// Give player 99 of first item
+// set num1 to 99 (will usually nuke (invalidate/delete) the item :<<<)
 if (stats.usedSlots > 0) {
     SaveAPI.setItem(0, { num1: 99 });
 }
