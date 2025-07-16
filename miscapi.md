@@ -35,10 +35,10 @@ Retrieves a formatted value from the save file.
 
 **Examples:**
 ```javascript
-api.get('money');           // Returns: 50000
-api.get('location');        // Returns: "Uptown Springdale"
-api.get('weatherevent');    // Returns: [1, 0, 1, 0, 0, 0, 0, 0]
-api.get('chest');           // Returns: [0, 1, 1, 0, ...] (144 elements)
+api.get('Money');                    // Returns something like 50000 ($500/£500/€500/50000yen etc)
+api.get('Location');                 // Returns an area i.e. "Uptown Springdale"
+api.get('Weather Events Active');    // Returns an array of numbers (why not boolean? idk just easier for me to implement): [1, 0, 1, 0, 0, 0, 0, 0]
+api.get('Treasure Chests Opened');   // Returns something like: [0, 1, 1, 0, ...]
 ```
 
 #### `set(fieldName, value)`
@@ -53,18 +53,18 @@ Sets a formatted value in the save file.
 **Examples:**
 ```javascript
 // Numbers
-api.set('money', 999999); // the max aka 999999yen/$9999.99/£9999.99/€9999.99
+api.set('Money', 999999); // the max aka 999999yen/$9999.99/£9999.99/€9999.99
 
 // Strings (enum values)
-api.set('location', 'Downtown Springdale');
-api.set('ficon', 'Pandle');  // Uses in-game name
+api.set('Location', 'Downtown Springdale');
+api.set('Friends App - Icon', 'Pandle');  // Uses in-game name
 
 // Bit arrays (0s and 1s)
-api.set('weatherevent', [1, 0, 1, 0, 0, 0, 0, 0]);
-api.set('chest', [0, 1, 1, 0, ...]);  // Can be shorter than full length but it causes the unspecified ones to be set to 0 (unchecked)
+api.set('Weather Events Active', [1, 0, 1, 0, 0, 0, 0, 0]);
+api.set('Treasure Chests Opened', [0, 1, 1, 0, ...]);  // Can be shorter than full length but it causes the unspecified ones to be set to 0 (unchecked)
 
 // Partial arrays (will warn but will work setting the unspecified ones to 0 aka unchecked)
-api.set('weatherevent', [1, 0, 1]);  // Warns: only 3/8 elements provided
+api.set('Weather Events Active', [1, 0, 1]);  // Warns: only 3/8 elements provided
 ```
 
 #### `getRaw(fieldName)`
@@ -77,7 +77,7 @@ Gets the raw hex bytes for a field.
 
 **Example:**
 ```javascript
-api.getRaw('money');  // Returns: "7F96"
+api.getRaw('Money');  // Returns: "7F96"
 ```
 
 #### `setRaw(fieldName, hexValue)`
@@ -91,7 +91,7 @@ Sets raw hex bytes for a field.
 
 **Example:**
 ```javascript
-api.setRaw('money', 'ff FF');  // Sets money to 65535 the case dosen't matter
+api.setRaw('Money', 'ff FF');  // Sets money to 65535 the case dosen't matter
 ```
 
 ### Information Methods
@@ -173,8 +173,8 @@ Returns the current API version as a number (NOT the save editer version. I cons
 api.getVersion() // Returns: [Version]
 
 function code() {
-if(api.getVersion() !== 1.0) {
-  throw Error("Plugin/extension/whateveryoucallthis is out of date :<<")
+if(api.getVersion() < 1.1) {
+  throw Error("This Plugin requires API v1.1 or later - please download the latest release of the save editor.")
 }
 
 // do stuff here like actual code
@@ -199,7 +199,7 @@ api.syncSave(d)
    * TL;DR requirements are lax, it internally rearranges it to my preferences :>>>>
 
 ## Data Types
-
+Note: This is not up-to-date. After the next major update, API docs *will* be cleaned up.
 ### Numbers
 - `uint8`: 0-255 (`0x00`-`0xFF`)
 - `uint16`: 0-65,535 (`0x00`-`0xFFFF`)
@@ -225,6 +225,7 @@ Arrays of 0s and 1s representing boolean flags:
 - `weatherevent`: 8 elements (weather event flags)
 - `trophy`: 96 elements (trophies collected)
 
+
 ### Raw Data
 - `hex`: Raw hex string data
 
@@ -240,32 +241,32 @@ try {
 }
 
 try {
-    api.set('ficon', 'Invalid Icon');
+    api.set('Friends App - Icon', 'Invalid Icon');
 } catch (error) {
-    console.error(error.message); // "Friends icon 'Invalid Icon' not found..."
+    console.error(error.message); // "Friends App - Icon 'Invalid Icon' not found..."
 }
 ```
 
 ## Bit Array Behavior
 
-For bit array fields (`chest`, `weatherevent`, `trophy`):
+For bit array fields (fields of type: `chest`, `weatherevent`, `trophy` etc):
 
 ### Getting Values
 ```javascript
-api.get('weatherevent');  // Returns: [1, 0, 1, 0, 0, 0, 0, 0]
+api.get('Weather Events Active');  // Returns: [1, 0, 1, 0, 0, 0, 0, 0]
 ```
 
 ### Setting Values
 ```javascript
 // Full array
-api.set('weatherevent', [1, 0, 1, 0, 0, 0, 0, 0]);
+api.set('Weather Events Active', [1, 0, 1, 0, 0, 0, 0, 0]);
 
 // Partial array (warns but works)
-api.set('weatherevent', [1, 0, 1]);  // Missing elements become 0
+api.set('Weather Events Active', [1, 0, 1]);  // Missing elements become 0
 // Console: "Weather event array has 3 elements, expected 8. Missing elements will be set to 0."
 
 // Boolean values also work
-api.set('weatherevent', [true, false, true, false]);
+api.set('Weather Events Active', [true, false, true, false]);
 ```
 
 ## Field Format Reference
