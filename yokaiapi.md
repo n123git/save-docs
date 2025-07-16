@@ -102,7 +102,7 @@ let energyHex = allYokai[0].getRaw("energy");
 console.log("Current energy hex:", energyHex);
 
 // Set raw energy data
-allYokai[0].setRaw("energy", "FF FF FF FF 00 00 00 00");
+allYokai[0].setRaw("energy", "FF FF 00 00");
 ```
 
 ### Property List & Editing Guide
@@ -144,7 +144,7 @@ expPoint:
 energy:
 - Edited via the helpers OR hex set and get methods: `yokai.setRaw("energy", "0A 00 01 0B")`. This holds the HP remaining and Soul guage.
    - Can NOT be edited via `set()`, and `get()`.
-   - Edit via `yokai.setHelper.energy.HP.set()`, and `yokai.setHelper.energy.Soul.set(2)` along with their respective get methods. (Im too lazy to add them to this).
+   - Edit via `yokai.setHelper.energy.HP.set()`, and `yokai.setHelper.energy.Soul.set()` along with their respective get methods. (Im too lazy to add them to this).
  
 ownerId:
 - Edited via the default set and get methods: `yokai.set("ownerId", "87f16038")`.
@@ -153,7 +153,7 @@ ownerId:
 IV_HP, IV_Str, IV_Spr, IV_Def, IV_Spd, EV_HP, EV_Str, EV_Spr, EV_Def, EV_Spd, SC_Str, SC_Spr, SC_Def, and SC_Spd:
 - Edited via the default set and get methods: `yokai.set("SC_Str", "-3")` or `yokai.set("IV_HP", 2)`. Note: SC stats are signed, others are **not**.
    - Can also be edited via `setRaw()`, and `getRaw()`.
-   - IVs can technically reach 127, but HP_IV's legal max is 80, and the other IVs cap out at 40. EVs cap out at 127. Legal SCs can't be smaller than -10 or larger than 25.
+   - IVs & EVs can technically reach 127, but the legal (allowed online) IVs MUST be equal to 40 when you half HP so `((HP / 2) + Str + Spr + Def + Spd) = 40`. This indirectly forces HP to be even. Also note that EVs cap out at 127 and legal SCs can’t be smaller than -10 or larger than 25.
 
 unknown:
 - Edited via the hex set and get methods: `yokai.setRaw("unknown", "a")`. Also this currently has no known use.
@@ -165,17 +165,17 @@ level:
    - Values > 99 automatically get set to 99 when the game is loaded.
  
 special6:
-- Edited via the helpers OR hex set and get methods: `yokai.setRaw("special6", "0A 00 01 0B...")`. This holds pose data.
+- Edited via the helpers OR hex set and get methods: `yokai.setRaw("special6", "03 AB 01 00")`. This holds pose data.
    - Can NOT be edited via `set()`, and `get()`.
    - Edit via `yokai.setHelper.special6.unlockedPoses.set()`, and `yokai.setHelper.special6.currentPose.set()` along with their respective get methods.
 
 loafAndAi:
-- Edited via the helpers OR hex set and get methods: `yokai.setRaw("loafAndAi", "0A 00 01 0B...")`. This holds attitude data. Loaf is loafing attitude, AI is move attitude/frequency/moveAI
+- Edited via the helpers OR hex set and get methods: `yokai.setRaw("loafAndAi", "01")`. This holds attitude data. Loaf is loafing attitude, AI is move attitude/frequency/moveAI
    - Can NOT be edited via `set()`, and `get()`.
    - Edit via `yokai.setHelper.loafAndAi.ai.set()`, and `yokai.setHelper.loafAndAi.loaf.set()` along with their corresponding get methods.
 
 specialEquip:
-- Edited via the helpers OR hex set and get methods: `yokai.setRaw("specialEquip", "0A 00 01 0B...")`. This holds Jibanyan's soultimate and Alliance (also known as Bony/Fleshy) data. Jibanyan's Alliance (and perhaps other story-befriends, and wicked yokai) *CANNOT* be changed due to how the game handles this in save files.
+- Edited via the helpers OR hex set and get methods: `yokai.setRaw("specialEquip", "90 C4 0F 05 01 DC 09")`. This holds Jibanyan's soultimate and Alliance (also known as Bony/Fleshy) data. Jibanyan's Alliance (and perhaps other story-befriends, and wicked yokai) *CANNOT* be changed due to how the game handles this in save files.
    - Can NOT be edited via `set()`, and `get()`.
    - Edit via `yokai.setHelper.specialEquip.alliance.set()`, and `yokai.setHelper.specialEquip.equipment.set()` (I totally didn't call it equipment because im brain-dead and too lazy to change it) along with their corresponding get methods. Note: for `alliance.set` any value that isnt "Bony" (case-insensitive) is considered fleshy/wicked/other. JIBANYAN SOULTIMATE IS CURRENTLY BROKEN USE HEX EDITING VIA SET AND GETRAW
 
