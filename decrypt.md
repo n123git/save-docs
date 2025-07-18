@@ -7,7 +7,7 @@ title: Decryption/Encryption
 
 # Game Files (game*.yw)
 
-First you must understand the structure of `game*.yw` files:
+First it'd help to understand the structure of `game*.yw` files:
 
 * Nonce (12 bytes) — at offset `0x00`-`0x0C`.
 * MAC (16 bytes) — from `0x0C` to `0x1C` (used internally during decryption).
@@ -22,9 +22,9 @@ The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to rem
 ## v1.0 Save Files
 ### Detection
 * In the international versions (non-JP), this format affects save files last saved in v1.0. They can be read by v2.0 game copies.
-  * In JP versions, it describes any version under 2.0, as the version history is different.
+  * In JP versions, it describes any version under 2.0, as the version history is different - which can be viewed [here](https://www.youkai-watch.jp/yw2/).
   * Note that all copies of _Psychic Specters_ or _Shin'uchi_ are v2.0. A save file will have v2.0 marked on it in-game if it is.
-* This can be programatically detected by checking if the fixed key AES-CCM decryption fails due to an incorrect authentication tag.
+* This can be programatically detected by checking if the fixed key AES-CCM decryption fails due to an incorrect authentication tag - if it does it's V2.0 (or your code is wrong!).
 
 ### Method
 * These are first decrypted via AES-CCM (not GCM or CTR). Also note that the AESkey is fixed in v1.0 saves: (the UTF-8 representation of "5+NI8WVq09V7LI5w").
@@ -50,7 +50,7 @@ The YW2 Demo dosen't save progress. This is a joke, ignore this (I refuse to rem
 #### Constructor init
 
 * Initialise `primeList` - a list of fixed, ordered list of all prime numbers from 3-1621.
-* Create a `Uint8Array` - referred to as table (with a length of 256), and initialize it with an identity mapping (table[i] = i for i from 0 to 255).
+* Create a `Uint8Array` - referred to as table (with a length of 256), and initialize it with an identity mapping (`table[i] = i` for i from 0 to 255).
 * Fill `table` so that `table[i] = i` for all `i` in `[0, 255]`
 * Create a `Xorshift` instance, seeded by the given `seed`.
 
