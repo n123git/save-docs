@@ -12,6 +12,20 @@ title: Header API
 * `api` - A global (and pre-defined) instance of `HeaderAPI`.
 * `fileBuffer` - decrypted save data used by the UI - stored as a `Uint8Array`.
 * `playerOffsets` - a global array containing the start pos' of each player block (`[0x5390, 0x5418, 0x54A0]`).
+* `encoder.encode()` - a global alias for `Text.Encode(str)`.
+* `decoder.decode()` - a global alias for `Text.Decode(str)`.
+* `async isDecrypted(fileBuffer)` - Checks if a `head.yw`/`head.ywd` is decrypted - returns true if decrypted, if encrypted or heavily corrupted returns false.
+* `async fullDecrypt()` - Decrypts a `head.yw` from `fileBuffer` (mutates it) (`head.yw` -> `head.ywd`). This also works on Yo-kai Watch 1 save files - although unintentional.
+* `async fullEncrypt()` - Encrypts a `head.ywd` from `fileBuffer` (mutates it) (`head.ywd` -> `head.yw`). This also works on Yo-kai Watch 1 save files - although unintentional.
+* `readUInt32(offset)` - Takes an offset of type `Number` and returns a `Number` corresponding that point in `fileBuffer` read as a uint32 (unsigned 32-bit integer).
+* `readUInt16(offset)` - Takes an offset of type `Number` and returns a `Number` corresponding that point in `fileBuffer` read as a uint16 (unsigned 16-bit integer).
+* `writeUInt32(offset, value)` - Takes an offset of type `Number` and a value, it writes that value as a `uint32` (unsigned 32-bit integer) and the offset in `fileBuffer`.
+* `writeUInt16(offset, value)` - Takes an offset of type `Number` and a value, it writes that value as a `uint16` (unsigned 16-bit integer) and the offset in `fileBuffer`.
+* `async download()` - Downloads `fileBuffer` as `head.ywd`.
+* `async downloadEncrypted()` - Encrypts `fileBuffer`, downloads it as a `head.yw` and then decrypts it using `fullDecrypt` and `fullEncrypt` respectively.
+* `formatPlayTime(seconds)` - Takes seconds in the form of `Number` and returns a string in format `HH:MM:SS` (seconds, minutes and hours are 0 padded when needed to look good).
+* `getUTF8ByteLength(str)` - Returns the amount of bytes a string takes up. Note: DESPITE THE NAME STATING UTF8 IT USES CP932 WHEN `utf8 == false`!
+
 
 ## Formats
 * `playerIndex` - A number from 0-2 where 0 is the 1st save file/player, 1 is the 2nd and 2 is the 3rd.
