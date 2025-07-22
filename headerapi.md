@@ -5,9 +5,10 @@ nav_order: 3
 title: Header API
 ---
 
+## Quick Start
 
 ## Misc
-* `utf8` - A global var that determines whether to use `cp932` (JP ver.) or `UTF-8` (International ver.). True by default. 
+* `utf8` - A global boolean that determines whether to use `cp932` (JP ver.) or `UTF-8` (International ver.). True by default. 
 * `panic()` - A function used to signal warnings - this is usually used by the API to signal errors, more can be found in the Error section.
 * `api` - A global (and pre-defined) instance of `HeaderAPI`.
 * `fileBuffer` - decrypted save data used by the UI - stored as a `Uint8Array`.
@@ -29,6 +30,8 @@ title: Header API
 
 ## Formats
 * `playerIndex` - A number from 0-2 where 0 is the 1st save file/player, 1 is the 2nd and 2 is the 3rd.
+* `rankVal` - A `Number` that controls Rank - `0` = E, `1` = D, ... `5` = S
+* `timeBlock` - An object structured like `{ year: 0x7E9, month: 0x0A, day: 0x02, hour: 0xB, minute: 0x00 }`.
 
 ## HeaderAPI
 * Constructor: `HeaderAPI(filebuf = fileBuffer)`
@@ -39,7 +42,12 @@ title: Header API
 * `getPlayers()` - Exports a JSON snapshot of the API's save data in this format:
   * `[{ name, rank, playTime, year, month, day, hour, minute, party } /* player 1 */, { name, rank, playTime, year, month, day, hour, minute, party } /* player 2 */, { name, rank, playTime, year, month, day, hour, minute, party } /* player 3 */]`
 * `setPlayerName(index, newName)` - Takes a `playerIndex` and `name` and sets that player's name to the input.
+* `setWatchRank(index, rankVal)` - Takes a `playerIndex` and a `rankVal` and sets that player's watch rank to that rank.
+* `setPlayTime(index, seconds)` - Takes a `playerIndex` and a `Number` (seconds) and sets that player's play time to that time.
+* `setLastSaveDate(index, { year, month, day, hour, minute })` - Takes a `playerIndex` and a `timeBlock` and sets that player's last save date to that date.
 
+
+  
 ## Text Class
 * `static Encode(str, utf8 = window.utf8)` - Encodes a string -> `Uint8Array`, if `utf8` is true it'll use UTF-8 encoding otherwise cp932/Windows 31-J (UTF-8 is needed for INTL versions while cp932 for JP).
 * `static Decode(bytes, utf8 = window.utf8)` - Decodes a `Uint8Array` -> string, if `utf8` is true it'll use UTF-8 encoding otherwise cp932/Windows 31-J (UTF-8 is needed for INTL versions while cp932 for JP).
